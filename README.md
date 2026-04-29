@@ -1,0 +1,161 @@
+# Threat Modelling Automation
+
+This project bootstraps a threat modelling automation workflow that:
+
+- parses UML/PlantUML-style architecture descriptions,
+- transforms the discovered system structure into a YAML starter model for Threagile-oriented workflows,
+- produces an architecture review checklist focused on ISO 21434 and IEC 62443 coverage.
+
+The current implementation is a practical first version intended to accelerate modelling, not a full Threagile schema exporter yet. It is built to be easy to extend with stricter UML parsing and a more exact Threagile mapping.
+
+## What It Does
+
+Input:
+
+- PlantUML-like declarations for components such as `actor`, `component`, `database`, `device`, `node`, `cloud`
+- grouping constructs such as `package`, `zone`, `cloud`, `node`, `rectangle`
+- simple data-flow relationships such as `a --> b : HTTPS`
+
+Output:
+
+- `threagile-model.yaml`: a starter YAML model with components, trust boundaries, and data flows
+- `architecture-review.md`: a standards-focused checklist highlighting missing or unclear architecture coverage
+- optional AI review content for current status, likely missing elements, connection gaps, impacts, and countermeasure ideas
+
+## Why This Helps
+
+For ISO 21434, the report pushes the model toward complete cyber-relevant item coverage, especially:
+
+- ECUs, gateways, sensors, actuators, backend services, diagnostics, and update paths
+- assets that are safety-relevant or cybersecurity-relevant
+- credentials, keys, configuration data, and interfaces that need authenticity/integrity controls
+
+For IEC 62443, the report encourages:
+
+- clear zones and conduits
+- industrial assets like PLCs, HMIs, historians, and engineering stations
+- operator and maintainer identities
+- segmentation, monitoring, remote access, logging, backup, and patching workflows
+
+## Quick Start
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -e .
+threatmod examples/vehicle_gateway.puml --output-dir output
+```
+
+Generated files will appear under `output/`.
+
+## Installers
+
+Linux/macOS-style shell:
+
+```bash
+./install.sh
+```
+
+Windows Command Prompt:
+
+```bat
+install.bat
+```
+
+These installers:
+
+- create a local `.venv`
+- upgrade `pip` and `setuptools`
+- install the project in editable mode
+- make the CLI and GUI launchers available inside the virtual environment
+- check whether Tkinter is available for the GUI
+- on Linux, try to install the system Tk package automatically when supported
+
+To launch the small desktop interface after installation:
+
+```bash
+threatmod-gui
+```
+
+If you want to run the interface directly from the repo without reinstalling:
+
+```bash
+./threatmod-gui.sh
+```
+
+This launcher now resolves the project path automatically, so you can start it from outside the repo too by using the full script path.
+
+Windows repo launcher:
+
+```bat
+threatmod-gui.bat
+```
+
+Windows CLI repo launcher:
+
+```bat
+threatmod-cli.bat examples\vehicle_gateway.puml --output-dir output
+```
+
+The interface lets you:
+
+- select the UML input file
+- select the output directory
+- enable OpenAI and/or Copilot review
+- paste API keys directly into the GUI for the current run
+- run the analysis and read the generated guidance in the same window
+
+On Windows, the same GUI is used through the batch launcher. The Windows installer checks whether Tkinter is bundled in the selected Python installation and stops with guidance if it is missing.
+
+The GUI does not require you to store API keys in files or shell profiles. It accepts the OpenAI and GitHub tokens as masked runtime inputs and clears them after each run.
+
+To enable the optional ChatGPT/OpenAI review stage, export an API key and add `--ai-review`:
+
+```bash
+export OPENAI_API_KEY="your_api_key_here"
+threatmod examples/vehicle_gateway.puml --output-dir output --ai-review
+```
+
+You can also pick a model explicitly:
+
+```bash
+threatmod examples/vehicle_gateway.puml --output-dir output --ai-review --openai-model gpt-5.2
+```
+
+When AI review is enabled, the tool also writes `output/ai-review.json` for downstream automation.
+
+To enable an additional GitHub Copilot review through GitHub Models, export a GitHub token with `models:read` and add `--copilot-review`:
+
+```bash
+export GITHUB_MODELS_TOKEN="your_github_token_here"
+threatmod examples/vehicle_gateway.puml --output-dir output --copilot-review
+```
+
+You can run both reviewers together:
+
+```bash
+export OPENAI_API_KEY="your_openai_key_here"
+export GITHUB_MODELS_TOKEN="your_github_token_here"
+threatmod examples/vehicle_gateway.puml --output-dir output --ai-review --copilot-review
+```
+
+## Example
+
+Use the sample UML file at [examples/vehicle_gateway.puml](/home/aldo/Documents/Threat_Modelling/examples/vehicle_gateway.puml).
+
+## Project Layout
+
+- [src/threatmod_automation/cli.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/cli.py): command-line entrypoint
+- [src/threatmod_automation/parser.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/parser.py): UML/PlantUML parser
+- [src/threatmod_automation/threagile.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/threagile.py): YAML model builder
+- [src/threatmod_automation/guidance.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/guidance.py): ISO 21434 / IEC 62443 coverage logic
+- [src/threatmod_automation/ai_review.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/ai_review.py): optional OpenAI and GitHub Copilot architecture reviewers
+- [src/threatmod_automation/yaml_writer.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/yaml_writer.py): dependency-free YAML serializer
+
+## Next Extensions
+
+- map more UML dialects such as XMI, Mermaid, and export formats from modelling tools
+- enrich the output into the exact Threagile schema you plan to use
+- add classification prompts for CIA, safety, authenticity, and asset criticality
+- infer zones/conduits more explicitly from deployment and network views
+- add machine-readable review outputs such as JSON findings

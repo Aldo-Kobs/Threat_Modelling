@@ -1,0 +1,27 @@
+@startuml
+title Vehicle Telematics Architecture
+
+package "Vehicle Zone" {
+  device "Brake ECU" as brake_ecu
+  device "Telematics Gateway" as tgw
+  device "Sensor Cluster" as sensors
+}
+
+package "Maintenance Zone" {
+  actor "Technician Laptop" as maintainer
+}
+
+package "Cloud Zone" {
+  cloud "OEM Backend API" as backend
+  database "Telemetry Store" as telemetry_db
+  component "Security Monitoring" as monitoring
+}
+
+maintainer --> tgw : UDS over TLS
+sensors --> brake_ecu : CAN bus
+tgw --> backend : HTTPS telemetry and OTA
+backend --> telemetry_db : SQL writes
+backend --> monitoring : security events
+
+@enduml
+

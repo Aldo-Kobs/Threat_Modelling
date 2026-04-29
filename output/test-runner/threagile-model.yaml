@@ -1,0 +1,74 @@
+threagile_version: future-compatible-starter
+title: Sample
+author:
+  name: threatmod-automation
+date: 2026-04-22
+business_criticality: important
+architecture:
+  trust_boundaries:
+    - Control Zone
+  components:
+    historian:
+      id: historian
+      title: Historian
+      type: database
+      trust_boundaries:
+        - default-network
+      tags:
+        - data-store
+      out_of_scope: false
+    hmi:
+      id: hmi
+      title: HMI
+      type: web-application
+      trust_boundaries:
+        - Control Zone
+      tags: []
+      out_of_scope: false
+    operator:
+      id: operator
+      title: Operator
+      type: client-system
+      trust_boundaries:
+        - default-network
+      tags:
+        - human-user
+      out_of_scope: false
+    plc:
+      id: plc
+      title: PLC
+      type: iot-device
+      trust_boundaries:
+        - Control Zone
+      tags:
+        - operational-technology
+      out_of_scope: false
+  data_flows:
+    flow_1:
+      id: flow_1
+      source: operator
+      target: hmi
+      description: HTTPS
+      protocol: https
+      authenticated: unknown
+      encrypted: true
+    flow_2:
+      id: flow_2
+      source: hmi
+      target: plc
+      description: OPCUA
+      protocol: opcua
+      authenticated: unknown
+      encrypted: true
+    flow_3:
+      id: flow_3
+      source: plc
+      target: historian
+      description: TCP
+      protocol: tcp
+      authenticated: unknown
+      encrypted: false
+questions_for_review:
+  - Which assets process safety-relevant or mission-critical functions?
+  - Which flows require authentication, encryption, freshness, and anti-replay controls?
+  - Where are identities, secrets, and update channels administered?

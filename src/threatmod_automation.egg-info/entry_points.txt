@@ -1,0 +1,3 @@
+[console_scripts]
+threatmod = threatmod_automation.cli:main
+threatmod-gui = threatmod_automation.gui:main

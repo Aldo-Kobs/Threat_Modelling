@@ -1,0 +1,13 @@
+
+@startuml
+title Sample
+package "Control Zone" {
+  device "PLC" as plc
+  component "HMI" as hmi
+}
+actor "Operator" as operator
+database "Historian" as historian
+operator --> hmi : HTTPS
+hmi --> plc : OPCUA
+plc --> historian : TCP
+@enduml

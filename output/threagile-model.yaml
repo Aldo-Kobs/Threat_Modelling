@@ -1,0 +1,119 @@
+threagile_version: future-compatible-starter
+title: Vehicle Telematics Architecture
+author:
+  name: threatmod-automation
+date: 2026-04-22
+business_criticality: important
+architecture:
+  trust_boundaries:
+    - Cloud Zone
+    - Maintenance Zone
+    - Vehicle Zone
+  components:
+    backend:
+      id: backend
+      title: OEM Backend API
+      type: web-service-rest
+      trust_boundaries:
+        - Cloud Zone
+      tags:
+        - it-service
+      out_of_scope: false
+    brake_ecu:
+      id: brake_ecu
+      title: Brake ECU
+      type: iot-device
+      trust_boundaries:
+        - Vehicle Zone
+      tags:
+        - operational-technology
+      out_of_scope: false
+    maintainer:
+      id: maintainer
+      title: Technician Laptop
+      type: client-system
+      trust_boundaries:
+        - Maintenance Zone
+      tags: []
+      out_of_scope: false
+    monitoring:
+      id: monitoring
+      title: Security Monitoring
+      type: web-application
+      trust_boundaries:
+        - Cloud Zone
+      tags:
+        - operational-technology
+      out_of_scope: false
+    sensors:
+      id: sensors
+      title: Sensor Cluster
+      type: iot-device
+      trust_boundaries:
+        - Vehicle Zone
+      tags:
+        - operational-technology
+      out_of_scope: false
+    telemetry_db:
+      id: telemetry_db
+      title: Telemetry Store
+      type: database
+      trust_boundaries:
+        - Cloud Zone
+      tags:
+        - data-store
+      out_of_scope: false
+    tgw:
+      id: tgw
+      title: Telematics Gateway
+      type: iot-device
+      trust_boundaries:
+        - Vehicle Zone
+      tags:
+        - network-infrastructure
+      out_of_scope: false
+  data_flows:
+    flow_1:
+      id: flow_1
+      source: maintainer
+      target: tgw
+      description: UDS over TLS
+      protocol: tls
+      authenticated: unknown
+      encrypted: true
+    flow_2:
+      id: flow_2
+      source: sensors
+      target: brake_ecu
+      description: CAN bus
+      protocol: can
+      authenticated: unknown
+      encrypted: false
+    flow_3:
+      id: flow_3
+      source: tgw
+      target: backend
+      description: HTTPS telemetry and OTA
+      protocol: https
+      authenticated: unknown
+      encrypted: true
+    flow_4:
+      id: flow_4
+      source: backend
+      target: telemetry_db
+      description: SQL writes
+      protocol: unknown
+      authenticated: unknown
+      encrypted: false
+    flow_5:
+      id: flow_5
+      source: backend
+      target: monitoring
+      description: security events
+      protocol: unknown
+      authenticated: unknown
+      encrypted: false
+questions_for_review:
+  - Which assets process safety-relevant or mission-critical functions?
+  - Which flows require authentication, encryption, freshness, and anti-replay controls?
+  - Where are identities, secrets, and update channels administered?
