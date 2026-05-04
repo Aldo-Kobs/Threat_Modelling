@@ -219,8 +219,8 @@ def generate_threagile_pdf(
         command.extend(["--user", f"{os.getuid()}:{os.getgid()}"])
     command.extend(
         [
-            "-v",
-            f"{output_dir}:{THREAGILE_WORKDIR}",
+            "--mount",
+            f"type=bind,source={output_dir},target={THREAGILE_WORKDIR}",
             docker_image.strip(),
             "--model",
             str(container_model_path),

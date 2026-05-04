@@ -128,6 +128,7 @@ class PipelineTests(unittest.TestCase):
 
         def fake_run(command, capture_output, text, check):
             self.assertIn("docker", command[0])
+            self.assertIn("--mount", command)
             self.assertIn("--model", command)
             self.assertIn("--output", command)
             self.assertIn("/app/work/threagile.yaml", command)

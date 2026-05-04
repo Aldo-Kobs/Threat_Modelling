@@ -55,6 +55,55 @@ To immediately run the generated model through the official Threagile Docker ima
 threatmod examples/vehicle_gateway.puml --output-dir output --threagile-docker
 ```
 
+## Threagile Docker Troubleshooting
+
+If Threagile reports `unable to read/parse model yaml`, the problem is usually one of these:
+
+- Docker Desktop did not bind-mount the host folder into `/app/work`
+- the shell-specific Windows mount syntax was wrong
+- the YAML file exists but the model content is not accepted by Threagile
+
+Start by verifying that Docker can see the files in the mounted folder.
+
+PowerShell:
+
+```powershell
+docker run --rm -it --mount "type=bind,src=.,target=/app/work" alpine ls -la /app/work
+```
+
+Command Prompt:
+
+```bat
+docker run --rm -it --mount "type=bind,src=%cd%,target=/app/work" alpine ls -la /app/work
+```
+
+Git Bash:
+
+```bash
+docker run --rm -it --mount type=bind,src="./",target=/app/work alpine ls -la /app/work
+```
+
+If `threagile.yaml` is not listed inside `/app/work`, the problem is Docker Desktop file sharing or the mount syntax, not the Threagile model itself.
+
+If the mount looks correct, test Threagile with its own stub model from the same folder:
+
+```powershell
+docker run --rm -it --mount "type=bind,src=.,target=/app/work" threagile/threagile --create-stub-model --output /app/work
+docker run --rm -it --mount "type=bind,src=.,target=/app/work" threagile/threagile --verbose --model /app/work/threagile-stub-model.yaml --output /app/work
+```
+
+How to interpret the result:
+
+- If the stub model also fails, fix Docker Desktop first.
+- If the stub model works but `threagile.yaml` fails, the bind mount is fine and the model content needs refinement.
+
+Windows-specific notes:
+
+- In Docker Desktop, make sure you are using Linux containers.
+- If you use Hyper-V mode, ensure the project directory is shared in Docker Desktop file sharing settings.
+- If you use WSL 2 mode, run the command from the same environment that owns the files whenever possible.
+- This project now uses Docker `--mount` instead of `-v` because `--mount` fails fast when the source path is wrong, while `-v` can silently create the wrong directory.
+
 ## Installers
 
 Linux/macOS-style shell:
