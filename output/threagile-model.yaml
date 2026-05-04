@@ -1,5 +1,5 @@
 threagile_version: 1.0.0
-title: Vehicle Telematics Architecture
+title: Sample
 date: 2026-05-04
 author:
   name: threatmod-automation
@@ -20,84 +20,87 @@ abuse_cases: {}
 security_requirements: {}
 tags_available:
   - data-store
-  - it-service
-  - network-infrastructure
+  - human-user
   - operational-technology
 data_assets:
-  UDS over TLS:
+  HTTPS:
     id: flow-data-1
-    description: Inferred from the data flow between Technician Laptop and Telematics Gateway.
+    description: Inferred from the data flow between Operator and HMI.
     usage: business
     tags: []
-    origin: Technician Laptop
-    owner: Telematics Gateway
+    origin: Operator
+    owner: HMI
     quantity: many
     confidentiality: restricted
     integrity: important
     availability: important
     justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
-  CAN bus:
+  OPCUA:
     id: flow-data-2
-    description: Inferred from the data flow between Sensor Cluster and Brake ECU.
+    description: Inferred from the data flow between HMI and PLC.
     usage: business
     tags: []
-    origin: Sensor Cluster
-    owner: Brake ECU
+    origin: HMI
+    owner: PLC
     quantity: many
     confidentiality: restricted
     integrity: important
     availability: important
     justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
-  HTTPS telemetry and OTA:
+  TCP:
     id: flow-data-3
-    description: Inferred from the data flow between Telematics Gateway and OEM Backend API.
+    description: Inferred from the data flow between PLC and Historian.
     usage: business
     tags: []
-    origin: Telematics Gateway
-    owner: OEM Backend API
-    quantity: many
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
-  SQL writes:
-    id: flow-data-4
-    description: Inferred from the data flow between OEM Backend API and Telemetry Store.
-    usage: business
-    tags: []
-    origin: OEM Backend API
-    owner: Telemetry Store
-    quantity: many
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
-  security events:
-    id: flow-data-5
-    description: Inferred from the data flow between OEM Backend API and Security Monitoring.
-    usage: business
-    tags: []
-    origin: OEM Backend API
-    owner: Security Monitoring
+    origin: PLC
+    owner: Historian
     quantity: many
     confidentiality: restricted
     integrity: important
     availability: important
     justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
 technical_assets:
-  OEM Backend API:
-    id: backend
-    description: Imported from UML element 'OEM Backend API' of kind 'cloud'.
+  Historian:
+    id: historian
+    description: Imported from UML element 'Historian' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-3
+    data_assets_stored:
+      - flow-data-3
+    data_formats_accepted: []
+    communication_links: {}
+  HMI:
+    id: hmi
+    description: Imported from UML element 'HMI' of kind 'component'.
     type: process
     usage: business
     used_as_client_by_human: false
     out_of_scope: false
     justification_out_of_scope: ""
-    size: system
-    technology: web-service-rest
-    tags:
-      - it-service
-    internet: true
+    size: component
+    technology: web-application
+    tags: []
+    internet: false
     machine: virtual
     encryption: none
     owner: Imported from UML
@@ -109,71 +112,28 @@ technical_assets:
     redundant: false
     custom_developed_parts: true
     data_assets_processed:
-      - flow-data-3
-      - flow-data-4
-      - flow-data-5
-    data_assets_stored: []
-    data_formats_accepted: []
-    communication_links:
-      Flow 4:
-        target: telemetry-db
-        description: SQL writes
-        protocol: unknown-protocol
-        authentication: none
-        authorization: none
-        tags: []
-        vpn: false
-        ip_filtered: false
-        readonly: false
-        usage: business
-        data_assets_sent:
-          - flow-data-4
-        data_assets_received: []
-      Flow 5:
-        target: monitoring
-        description: security events
-        protocol: unknown-protocol
-        authentication: none
-        authorization: none
-        tags: []
-        vpn: false
-        ip_filtered: false
-        readonly: false
-        usage: business
-        data_assets_sent:
-          - flow-data-5
-        data_assets_received: []
-  Brake ECU:
-    id: brake-ecu
-    description: Imported from UML element 'Brake ECU' of kind 'device'.
-    type: process
-    usage: business
-    used_as_client_by_human: false
-    out_of_scope: false
-    justification_out_of_scope: ""
-    size: component
-    technology: iot-device
-    tags:
-      - operational-technology
-    internet: false
-    machine: physical
-    encryption: none
-    owner: Imported from UML
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
-    multi_tenant: false
-    redundant: false
-    custom_developed_parts: false
-    data_assets_processed:
+      - flow-data-1
       - flow-data-2
     data_assets_stored: []
     data_formats_accepted: []
-    communication_links: {}
-  Technician Laptop:
-    id: maintainer
-    description: Imported from UML element 'Technician Laptop' of kind 'actor'.
+    communication_links:
+      Flow 2:
+        target: plc
+        description: OPCUA
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Operator:
+    id: operator
+    description: Imported from UML element 'Operator' of kind 'actor'.
     type: external-entity
     usage: business
     used_as_client_by_human: true
@@ -181,7 +141,8 @@ technical_assets:
     justification_out_of_scope: ""
     size: system
     technology: client-system
-    tags: []
+    tags:
+      - human-user
     internet: false
     machine: physical
     encryption: none
@@ -199,9 +160,9 @@ technical_assets:
     data_formats_accepted: []
     communication_links:
       Flow 1:
-        target: tgw
-        description: UDS over TLS
-        protocol: binary-encrypted
+        target: hmi
+        description: HTTPS
+        protocol: https
         authentication: none
         authorization: none
         tags: []
@@ -212,37 +173,9 @@ technical_assets:
         data_assets_sent:
           - flow-data-1
         data_assets_received: []
-  Security Monitoring:
-    id: monitoring
-    description: Imported from UML element 'Security Monitoring' of kind 'component'.
-    type: process
-    usage: business
-    used_as_client_by_human: false
-    out_of_scope: false
-    justification_out_of_scope: ""
-    size: component
-    technology: web-application
-    tags:
-      - operational-technology
-    internet: true
-    machine: virtual
-    encryption: none
-    owner: Imported from UML
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
-    multi_tenant: false
-    redundant: false
-    custom_developed_parts: true
-    data_assets_processed:
-      - flow-data-5
-    data_assets_stored: []
-    data_formats_accepted: []
-    communication_links: {}
-  Sensor Cluster:
-    id: sensors
-    description: Imported from UML element 'Sensor Cluster' of kind 'device'.
+  PLC:
+    id: plc
+    description: Imported from UML element 'PLC' of kind 'device'.
     type: process
     usage: business
     used_as_client_by_human: false
@@ -265,85 +198,14 @@ technical_assets:
     custom_developed_parts: false
     data_assets_processed:
       - flow-data-2
-    data_assets_stored: []
-    data_formats_accepted: []
-    communication_links:
-      Flow 2:
-        target: brake-ecu
-        description: CAN bus
-        protocol: binary
-        authentication: none
-        authorization: none
-        tags: []
-        vpn: false
-        ip_filtered: false
-        readonly: false
-        usage: business
-        data_assets_sent:
-          - flow-data-2
-        data_assets_received: []
-  Telemetry Store:
-    id: telemetry-db
-    description: Imported from UML element 'Telemetry Store' of kind 'database'.
-    type: datastore
-    usage: business
-    used_as_client_by_human: false
-    out_of_scope: false
-    justification_out_of_scope: ""
-    size: component
-    technology: database
-    tags:
-      - data-store
-    internet: true
-    machine: virtual
-    encryption: transparent
-    owner: Imported from UML
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
-    multi_tenant: false
-    redundant: false
-    custom_developed_parts: false
-    data_assets_processed:
-      - flow-data-4
-    data_assets_stored:
-      - flow-data-4
-    data_formats_accepted: []
-    communication_links: {}
-  Telematics Gateway:
-    id: tgw
-    description: Imported from UML element 'Telematics Gateway' of kind 'device'.
-    type: process
-    usage: business
-    used_as_client_by_human: false
-    out_of_scope: false
-    justification_out_of_scope: ""
-    size: component
-    technology: iot-device
-    tags:
-      - network-infrastructure
-    internet: false
-    machine: physical
-    encryption: none
-    owner: Imported from UML
-    confidentiality: restricted
-    integrity: important
-    availability: important
-    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
-    multi_tenant: false
-    redundant: false
-    custom_developed_parts: false
-    data_assets_processed:
-      - flow-data-1
       - flow-data-3
     data_assets_stored: []
     data_formats_accepted: []
     communication_links:
       Flow 3:
-        target: backend
-        description: HTTPS telemetry and OTA
-        protocol: https
+        target: historian
+        description: TCP
+        protocol: binary
         authentication: none
         authorization: none
         tags: []
@@ -355,33 +217,14 @@ technical_assets:
           - flow-data-3
         data_assets_received: []
 trust_boundaries:
-  Cloud Zone:
-    id: cloud-zone
-    description: Cloud Zone
-    type: network-cloud-provider
-    tags: []
-    technical_assets_inside:
-      - backend
-      - monitoring
-      - telemetry-db
-    trust_boundaries_nested: []
-  Maintenance Zone:
-    id: maintenance-zone
-    description: Maintenance Zone
+  Control Zone:
+    id: control-zone
+    description: Control Zone
     type: network-on-prem
     tags: []
     technical_assets_inside:
-      - maintainer
-    trust_boundaries_nested: []
-  Vehicle Zone:
-    id: vehicle-zone
-    description: Vehicle Zone
-    type: network-on-prem
-    tags: []
-    technical_assets_inside:
-      - brake-ecu
-      - sensors
-      - tgw
+      - hmi
+      - plc
     trust_boundaries_nested: []
 shared_runtimes: {}
 individual_risk_categories: {}

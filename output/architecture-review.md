@@ -1,12 +1,13 @@
-# Vehicle Telematics Architecture
+# Sample
 
 ## Coverage Summary
-- Components discovered: 7
-- Data flows discovered: 5
-- Trust boundaries discovered: 3
+- Components discovered: 4
+- Data flows discovered: 3
+- Trust boundaries discovered: 1
 
 ## Missing Or Needs Review
-- Core architecture elements were detected. Review protocol, authentication, and asset criticality details next.
+- No gateway, firewall, proxy, or comparable choke point was identified.
+- No firmware/software update or maintenance path was identified.
 
 ## ISO 21434 Focus
 - Confirm every vehicle, ECU, gateway, sensor, actuator, backend, and maintenance interface is modelled as an asset or interface.
