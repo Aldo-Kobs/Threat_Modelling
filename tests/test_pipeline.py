@@ -115,6 +115,7 @@ class PipelineTests(unittest.TestCase):
         result = run_analysis(input_path, output_dir=output_dir)
 
         self.assertTrue(result.yaml_path.exists())
+        self.assertTrue((output_dir / "threagile.yaml").exists())
         self.assertTrue(result.report_path.exists())
         self.assertIsNone(result.threagile_pdf_path)
         self.assertIsNone(result.ai_review_path)
@@ -129,6 +130,7 @@ class PipelineTests(unittest.TestCase):
             self.assertIn("docker", command[0])
             self.assertIn("--model", command)
             self.assertIn("--output", command)
+            self.assertIn("/app/work/threagile.yaml", command)
             (output_dir / "report.pdf").write_text("fake pdf placeholder", encoding="utf-8")
             return mock.Mock()
 

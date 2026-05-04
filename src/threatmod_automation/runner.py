@@ -59,18 +59,20 @@ def run_analysis(
 
     output_dir.mkdir(parents=True, exist_ok=True)
     yaml_path = output_dir / "threagile-model.yaml"
+    docker_yaml_path = output_dir / "threagile.yaml"
     report_path = output_dir / "architecture-review.md"
     ai_review_path = output_dir / "ai-review.json" if ai_reviews else None
 
-    yaml_path.write_text(dump_yaml(threagile_model) + "\n", encoding="utf-8")
+    yaml_text = dump_yaml(threagile_model) + "\n"
+    yaml_path.write_text(yaml_text, encoding="utf-8")
+    docker_yaml_path.write_text(yaml_text, encoding="utf-8")
     report_path.write_text(render_assessment_markdown(assessment), encoding="utf-8")
     if ai_review_path is not None:
         ai_review_path.write_text(json.dumps(assessment["ai_reviews"], indent=2) + "\n", encoding="utf-8")
     threagile_pdf_path = None
     if threagile_docker:
         threagile_pdf_path = generate_threagile_pdf(
-            yaml_path,
-            output_dir=output_dir,
+            docker_yaml_path,
             docker_image=threagile_image,
         )
 

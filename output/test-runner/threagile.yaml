@@ -1,0 +1,231 @@
+threagile_version: 1.0.0
+title: Sample
+date: 2026-05-04
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: Imported automatically from UML / PlantUML by threatmod-automation.
+business_criticality: important
+business_overview:
+  description: Review and refine the inferred business context before relying on generated findings.
+  images: []
+technical_overview:
+  description: This Threagile model was generated from the parsed architecture and should be refined in-place.
+  images: []
+questions:
+  Which assets process safety-relevant or mission-critical functions?: ""
+  Which flows require authentication, encryption, freshness, and anti-replay controls?: ""
+  Where are identities, secrets, and update channels administered?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - operational-technology
+data_assets:
+  HTTPS:
+    id: flow-data-1
+    description: Inferred from the data flow between Operator and HMI.
+    usage: business
+    tags: []
+    origin: Operator
+    owner: HMI
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  OPCUA:
+    id: flow-data-2
+    description: Inferred from the data flow between HMI and PLC.
+    usage: business
+    tags: []
+    origin: HMI
+    owner: PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  TCP:
+    id: flow-data-3
+    description: Inferred from the data flow between PLC and Historian.
+    usage: business
+    tags: []
+    origin: PLC
+    owner: Historian
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  Historian:
+    id: historian
+    description: Imported from UML element 'Historian' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-3
+    data_assets_stored:
+      - flow-data-3
+    data_formats_accepted: []
+    communication_links: {}
+  HMI:
+    id: hmi
+    description: Imported from UML element 'HMI' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags: []
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 2:
+        target: plc
+        description: OPCUA
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Operator:
+    id: operator
+    description: Imported from UML element 'Operator' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: hmi
+        description: HTTPS
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+  PLC:
+    id: plc
+    description: Imported from UML element 'PLC' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-2
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: historian
+        description: TCP
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+trust_boundaries:
+  Control Zone:
+    id: control-zone
+    description: Control Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - hmi
+      - plc
+    trust_boundaries_nested: []
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}

@@ -192,7 +192,6 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
 def generate_threagile_pdf(
     model_path: Path,
     *,
-    output_dir: Path,
     docker_image: str = DEFAULT_THREAGILE_IMAGE,
 ) -> Path:
     if not docker_image.strip():
@@ -202,9 +201,14 @@ def generate_threagile_pdf(
             "Docker is not installed or not available on PATH. Install Docker to generate the Threagile PDF report."
         )
 
-    output_dir = output_dir.resolve()
+    model_path = model_path.resolve()
+    if not model_path.exists():
+        raise RuntimeError(f"The generated Threagile model file does not exist: {model_path}")
+
+    output_dir = model_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
     started_at = time.time()
+    container_model_path = THREAGILE_WORKDIR / model_path.name
 
     command = [
         "docker",
@@ -219,7 +223,7 @@ def generate_threagile_pdf(
             f"{output_dir}:{THREAGILE_WORKDIR}",
             docker_image.strip(),
             "--model",
-            str(THREAGILE_WORKDIR / model_path.name),
+            str(container_model_path),
             "--output",
             str(THREAGILE_WORKDIR),
         ]
@@ -229,7 +233,10 @@ def generate_threagile_pdf(
         subprocess.run(command, capture_output=True, text=True, check=True)
     except subprocess.CalledProcessError as exc:
         details = "\n".join(part for part in [exc.stdout.strip(), exc.stderr.strip()] if part)
-        message = f"Threagile Docker execution failed using image '{docker_image.strip()}'."
+        message = (
+            f"Threagile Docker execution failed using image '{docker_image.strip()}'. "
+            f"Host model: {model_path}. Container model: {container_model_path}."
+        )
         if details:
             message = f"{message}\n{details}"
         raise RuntimeError(message) from exc
