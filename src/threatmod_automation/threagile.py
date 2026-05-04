@@ -58,6 +58,7 @@ STORAGE_KINDS = {"database", "queue"}
 
 def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
     sorted_components = sorted(model.components.items())
+    technical_asset_ids = _build_component_id_map(model)
     boundary_ids = {name: _slugify(name) for name in sorted(model.boundaries)}
     boundary_children = {name: set() for name in boundary_ids}
 
@@ -87,7 +88,7 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
 
             if flow.source in communication_links_by_component and flow.target in model.components:
                 communication_links_by_component[flow.source][f"Flow {index}"] = {
-                    "target": flow.target,
+                    "target": technical_asset_ids[flow.target],
                     "description": flow.description or f"{flow.source} to {flow.target}",
                     "protocol": PROTOCOL_MAP.get(flow.protocol, "unknown-protocol"),
                     "authentication": _infer_authentication(flow),
@@ -104,7 +105,7 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
     technical_assets: dict[str, dict] = {}
     for alias, component in sorted_components:
         technical_assets[_unique_label(component.name, alias, technical_assets)] = {
-            "id": alias,
+            "id": technical_asset_ids[alias],
             "description": f"Imported from UML element '{component.name}' of kind '{component.kind}'.",
             "type": TECHNICAL_ASSET_TYPE_MAP.get(component.kind, "process"),
             "usage": "business",
@@ -136,7 +137,7 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
     trust_boundaries: dict[str, dict] = {}
     for boundary_name in sorted(model.boundaries):
         direct_assets = [
-            alias
+            technical_asset_ids[alias]
             for alias, component in sorted_components
             if component.boundaries and component.boundaries[-1] == boundary_name
         ]
@@ -378,6 +379,23 @@ def _slugify(value: str) -> str:
     while "--" in slug:
         slug = slug.replace("--", "-")
     return slug or "boundary"
+
+
+def _build_component_id_map(model: ArchitectureModel) -> dict[str, str]:
+    resolved_ids: dict[str, str] = {}
+    seen_ids: set[str] = set()
+
+    for alias in sorted(model.components):
+        base_id = _slugify(alias)
+        candidate = base_id
+        counter = 2
+        while candidate in seen_ids:
+            candidate = f"{base_id}-{counter}"
+            counter += 1
+        resolved_ids[alias] = candidate
+        seen_ids.add(candidate)
+
+    return resolved_ids
 
 
 def _unique_label(preferred: str, fallback: str, container: dict[str, dict]) -> str:

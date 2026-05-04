@@ -52,6 +52,31 @@ class PipelineTests(unittest.TestCase):
             ["hmi", "plc"],
         )
 
+    def test_threagile_ids_are_slugified_for_aliases_and_references(self) -> None:
+        sample = """
+@startuml
+title Slugify
+package "Vehicle Zone" {
+  device "Brake ECU" as brake_ecu
+  database "Telemetry Store" as telemetry.db
+}
+brake_ecu --> telemetry.db : TCP
+@enduml
+"""
+        model = parse_plantuml(sample)
+        threagile = build_threagile_yaml_model(model)
+
+        self.assertEqual(threagile["technical_assets"]["Brake ECU"]["id"], "brake-ecu")
+        self.assertEqual(threagile["technical_assets"]["Telemetry Store"]["id"], "telemetry-db")
+        self.assertEqual(
+            threagile["technical_assets"]["Brake ECU"]["communication_links"]["Flow 1"]["target"],
+            "telemetry-db",
+        )
+        self.assertEqual(
+            threagile["trust_boundaries"]["Vehicle Zone"]["technical_assets_inside"],
+            ["brake-ecu", "telemetry-db"],
+        )
+
     def test_assessment_renders_ai_review_sections(self) -> None:
         model = parse_plantuml(SAMPLE)
         ai_review = AIReviewResult(
