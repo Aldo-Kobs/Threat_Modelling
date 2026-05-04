@@ -6,13 +6,13 @@ def dump_yaml(data: object, indent: int = 0) -> str:
         lines: list[str] = []
         for key, value in data.items():
             if _is_scalar(value):
-                lines.append(f"{' ' * indent}{key}: {_render_scalar(value)}")
+                lines.append(f"{' ' * indent}{_render_key(key)}: {_render_scalar(value)}")
             elif isinstance(value, list) and not value:
-                lines.append(f"{' ' * indent}{key}: []")
+                lines.append(f"{' ' * indent}{_render_key(key)}: []")
             elif isinstance(value, dict) and not value:
-                lines.append(f"{' ' * indent}{key}: {{}}")
+                lines.append(f"{' ' * indent}{_render_key(key)}: {{}}")
             else:
-                lines.append(f"{' ' * indent}{key}:")
+                lines.append(f"{' ' * indent}{_render_key(key)}:")
                 lines.append(dump_yaml(value, indent + 2))
         return "\n".join(lines)
     if isinstance(data, list):
@@ -31,6 +31,19 @@ def dump_yaml(data: object, indent: int = 0) -> str:
 
 def _is_scalar(value: object) -> bool:
     return value is None or isinstance(value, (str, int, float, bool))
+
+
+def _render_key(value: object) -> str:
+    text = str(value)
+    if (
+        text == ""
+        or text[0] in {"-", "?", "@", "!", "&", "*"}
+        or any(char in text for char in [":", "#", "{", "}", "[", "]", '"', "\n", "\r", "\t"])
+        or text.strip() != text
+    ):
+        escaped = text.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{escaped}"'
+    return text
 
 
 def _render_scalar(value: object) -> str:

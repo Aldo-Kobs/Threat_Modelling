@@ -1,6 +1,7 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -42,9 +43,14 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("plc", model.components)
         self.assertEqual(len(model.data_flows), 3)
         self.assertTrue(assessment["coverage"]["has_network_boundary"])
-        self.assertIn("components:", rendered)
-        self.assertIn("data_flows:", rendered)
-        self.assertEqual(threagile["architecture"]["components"]["plc"]["type"], "iot-device")
+        self.assertIn("technical_assets:", rendered)
+        self.assertIn("trust_boundaries:", rendered)
+        self.assertEqual(threagile["technical_assets"]["PLC"]["technology"], "iot-device")
+        self.assertEqual(threagile["technical_assets"]["Historian"]["type"], "datastore")
+        self.assertEqual(
+            threagile["trust_boundaries"]["Control Zone"]["technical_assets_inside"],
+            ["hmi", "plc"],
+        )
 
     def test_assessment_renders_ai_review_sections(self) -> None:
         model = parse_plantuml(SAMPLE)
@@ -110,5 +116,29 @@ class PipelineTests(unittest.TestCase):
 
         self.assertTrue(result.yaml_path.exists())
         self.assertTrue(result.report_path.exists())
+        self.assertIsNone(result.threagile_pdf_path)
         self.assertIsNone(result.ai_review_path)
         self.assertIn("Coverage Summary", result.report_path.read_text(encoding="utf-8"))
+
+    def test_runner_can_generate_threagile_pdf_via_docker(self) -> None:
+        input_path = Path("examples/test-sample.puml")
+        input_path.write_text(SAMPLE, encoding="utf-8")
+        output_dir = Path("output/test-runner-docker")
+
+        def fake_run(command, capture_output, text, check):
+            self.assertIn("docker", command[0])
+            self.assertIn("--model", command)
+            self.assertIn("--output", command)
+            (output_dir / "report.pdf").write_text("fake pdf placeholder", encoding="utf-8")
+            return mock.Mock()
+
+        with mock.patch("threatmod_automation.threagile.shutil.which", return_value="/usr/bin/docker"):
+            with mock.patch("threatmod_automation.threagile.subprocess.run", side_effect=fake_run):
+                result = run_analysis(
+                    input_path,
+                    output_dir=output_dir,
+                    threagile_docker=True,
+                )
+
+        self.assertEqual(result.threagile_pdf_path, output_dir.resolve() / "report.pdf")
+        self.assertTrue(result.threagile_pdf_path.exists())

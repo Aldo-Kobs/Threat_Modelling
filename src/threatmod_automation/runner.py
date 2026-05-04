@@ -7,7 +7,7 @@ from pathlib import Path
 from .ai_review import AIReviewResult, review_architecture_with_copilot, review_architecture_with_openai
 from .guidance import build_assessment, render_assessment_markdown
 from .parser import parse_plantuml
-from .threagile import build_threagile_yaml_model
+from .threagile import DEFAULT_THREAGILE_IMAGE, build_threagile_yaml_model, generate_threagile_pdf
 from .yaml_writer import dump_yaml
 
 
@@ -15,6 +15,7 @@ from .yaml_writer import dump_yaml
 class RunResult:
     yaml_path: Path
     report_path: Path
+    threagile_pdf_path: Path | None
     ai_review_path: Path | None
     ai_reviews: list[AIReviewResult]
 
@@ -29,6 +30,8 @@ def run_analysis(
     copilot_review: bool = False,
     copilot_model: str = "openai/gpt-5.2",
     copilot_api_key: str | None = None,
+    threagile_docker: bool = False,
+    threagile_image: str = DEFAULT_THREAGILE_IMAGE,
 ) -> RunResult:
     source = input_path.read_text(encoding="utf-8")
     model = parse_plantuml(source)
@@ -63,10 +66,18 @@ def run_analysis(
     report_path.write_text(render_assessment_markdown(assessment), encoding="utf-8")
     if ai_review_path is not None:
         ai_review_path.write_text(json.dumps(assessment["ai_reviews"], indent=2) + "\n", encoding="utf-8")
+    threagile_pdf_path = None
+    if threagile_docker:
+        threagile_pdf_path = generate_threagile_pdf(
+            yaml_path,
+            output_dir=output_dir,
+            docker_image=threagile_image,
+        )
 
     return RunResult(
         yaml_path=yaml_path,
         report_path=report_path,
+        threagile_pdf_path=threagile_pdf_path,
         ai_review_path=ai_review_path,
         ai_reviews=ai_reviews,
     )

@@ -4,11 +4,12 @@ import argparse
 from pathlib import Path
 
 from .runner import run_analysis
+from .threagile import DEFAULT_THREAGILE_IMAGE
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Convert UML/PlantUML architecture text into a Threagile-oriented YAML starter model and guidance report."
+        description="Convert UML/PlantUML architecture text into a Threagile-compatible YAML model and guidance report."
     )
     parser.add_argument("input", type=Path, help="Path to a PlantUML/UML text file.")
     parser.add_argument(
@@ -37,6 +38,16 @@ def build_parser() -> argparse.ArgumentParser:
         default="openai/gpt-5.2",
         help="GitHub Models model to use for the optional Copilot review stage.",
     )
+    parser.add_argument(
+        "--threagile-docker",
+        action="store_true",
+        help="Run the official Threagile Docker image against the generated YAML and create the PDF report.",
+    )
+    parser.add_argument(
+        "--threagile-image",
+        default=DEFAULT_THREAGILE_IMAGE,
+        help="Docker image to use when --threagile-docker is enabled.",
+    )
     return parser
 
 
@@ -49,10 +60,14 @@ def main() -> None:
         openai_model=args.openai_model,
         copilot_review=args.copilot_review,
         copilot_model=args.copilot_model,
+        threagile_docker=args.threagile_docker,
+        threagile_image=args.threagile_image,
     )
 
     print(f"Wrote {result.yaml_path}")
     print(f"Wrote {result.report_path}")
+    if result.threagile_pdf_path is not None:
+        print(f"Wrote {result.threagile_pdf_path}")
     if result.ai_review_path is not None:
         print(f"Wrote {result.ai_review_path}")
 
