@@ -3,6 +3,7 @@
 This project bootstraps a threat modelling automation workflow that:
 
 - parses UML/PlantUML-style architecture descriptions,
+- accepts StarUML project and fragment files (`.mdj` and `.mfj`),
 - transforms the discovered system structure into a YAML starter model for Threagile-oriented workflows,
 - produces an architecture review checklist focused on ISO 21434 and IEC 62443 coverage.
 
@@ -15,6 +16,7 @@ Input:
 - PlantUML-like declarations for components such as `actor`, `component`, `database`, `device`, `node`, `cloud`
 - grouping constructs such as `package`, `zone`, `cloud`, `node`, `rectangle`
 - simple data-flow relationships such as `a --> b : HTTPS`
+- StarUML JSON project and fragment files (`.mdj`, `.mfj`) with recognizable UML, DFD, and C4-style elements and relationships
 
 Output:
 
@@ -48,6 +50,8 @@ threatmod examples/vehicle_gateway.puml --output-dir output
 ```
 
 Generated files will appear under `output/`.
+
+The same command also accepts StarUML files, for example `threatmod architecture.mdj --output-dir output`.
 
 To immediately run the generated model through the official Threagile Docker image and produce the PDF report in the same folder:
 
@@ -155,7 +159,7 @@ threatmod-cli.bat examples\vehicle_gateway.puml --output-dir output
 
 The interface lets you:
 
-- select the UML input file
+- select the PlantUML/UML or StarUML `.mdj` / `.mfj` input file
 - select the output directory
 - enable OpenAI and/or Copilot review
 - optionally trigger the official Threagile Docker image and generate `report.pdf`
@@ -203,7 +207,7 @@ Use the sample UML file at [examples/vehicle_gateway.puml](/home/aldo/Documents/
 ## Project Layout
 
 - [src/threatmod_automation/cli.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/cli.py): command-line entrypoint
-- [src/threatmod_automation/parser.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/parser.py): UML/PlantUML parser
+- [src/threatmod_automation/parser.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/parser.py): PlantUML and StarUML parser
 - [src/threatmod_automation/threagile.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/threagile.py): YAML model builder
 - [src/threatmod_automation/guidance.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/guidance.py): ISO 21434 / IEC 62443 coverage logic
 - [src/threatmod_automation/ai_review.py](/home/aldo/Documents/Threat_Modelling/src/threatmod_automation/ai_review.py): optional OpenAI and GitHub Copilot architecture reviewers
@@ -211,7 +215,7 @@ Use the sample UML file at [examples/vehicle_gateway.puml](/home/aldo/Documents/
 
 ## Next Extensions
 
-- map more UML dialects such as XMI, Mermaid, and export formats from modelling tools
+- expand support for more UML dialects such as XMI and Mermaid, and deepen StarUML coverage further
 - enrich the output into the exact Threagile schema you plan to use
 - add classification prompts for CIA, safety, authenticity, and asset criticality
 - infer zones/conduits more explicitly from deployment and network views

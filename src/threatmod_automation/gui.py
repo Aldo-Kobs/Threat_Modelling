@@ -41,7 +41,7 @@ class ThreatmodApp:
             row=0, column=0, columnspan=3, sticky="w", pady=(0, 12)
         )
 
-        ttk.Label(frame, text="UML / PlantUML input").grid(row=1, column=0, sticky="w", pady=4)
+        ttk.Label(frame, text="Architecture input").grid(row=1, column=0, sticky="w", pady=4)
         ttk.Entry(frame, textvariable=self.input_path).grid(row=1, column=1, sticky="ew", padx=8)
         ttk.Button(frame, text="Browse", command=self._browse_input).grid(row=1, column=2, sticky="ew")
 
@@ -90,7 +90,7 @@ class ThreatmodApp:
         ttk.Label(
             hints,
             text=(
-                "1. Pick a UML/PlantUML file.\n"
+                "1. Pick a PlantUML or StarUML architecture file.\n"
                 "2. Choose optional reviewers and paste keys if needed.\n"
                 "3. Optionally enable the Threagile Docker PDF run.\n"
                 "4. Click Run Analysis.\n"
@@ -128,8 +128,13 @@ class ThreatmodApp:
 
     def _browse_input(self) -> None:
         filename = filedialog.askopenfilename(
-            title="Select UML or PlantUML file",
-            filetypes=[("PlantUML files", "*.puml *.uml *.txt"), ("All files", "*.*")],
+            title="Select architecture file",
+            filetypes=[
+                ("Supported files", "*.puml *.uml *.txt *.mdj *.mfj"),
+                ("PlantUML text", "*.puml *.uml *.txt"),
+                ("StarUML files", "*.mdj *.mfj"),
+                ("All files", "*.*"),
+            ],
         )
         if filename:
             self.input_path.set(filename)
@@ -145,7 +150,7 @@ class ThreatmodApp:
     def _start_analysis(self) -> None:
         input_path = Path(self.input_path.get())
         if not input_path.exists():
-            messagebox.showerror("Input Missing", "The selected UML/PlantUML input file does not exist.")
+            messagebox.showerror("Input Missing", "The selected architecture input file does not exist.")
             return
 
         if self.openai_review.get() and not self.openai_api_key.get().strip():

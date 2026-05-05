@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .ai_review import AIReviewResult, review_architecture_with_copilot, review_architecture_with_openai
 from .guidance import build_assessment, render_assessment_markdown
-from .parser import parse_plantuml
+from .parser import parse_architecture
 from .threagile import DEFAULT_THREAGILE_IMAGE, build_threagile_yaml_model, generate_threagile_pdf
 from .yaml_writer import dump_yaml
 
@@ -34,7 +34,7 @@ def run_analysis(
     threagile_image: str = DEFAULT_THREAGILE_IMAGE,
 ) -> RunResult:
     source = input_path.read_text(encoding="utf-8")
-    model = parse_plantuml(source)
+    model = parse_architecture(source, source_name=input_path.name)
 
     ai_reviews: list[AIReviewResult] = []
     if openai_review:

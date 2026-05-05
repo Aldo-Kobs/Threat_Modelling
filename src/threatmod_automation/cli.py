@@ -9,9 +9,16 @@ from .threagile import DEFAULT_THREAGILE_IMAGE
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Convert UML/PlantUML architecture text into a Threagile-compatible YAML model and guidance report."
+        description=(
+            "Convert PlantUML/UML text or StarUML project/fragment files into a "
+            "Threagile-compatible YAML model and guidance report."
+        )
     )
-    parser.add_argument("input", type=Path, help="Path to a PlantUML/UML text file.")
+    parser.add_argument(
+        "input",
+        type=Path,
+        help="Path to a PlantUML/UML text file or StarUML .mdj/.mfj file.",
+    )
     parser.add_argument(
         "--output-dir",
         type=Path,

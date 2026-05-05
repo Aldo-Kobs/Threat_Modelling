@@ -1,3 +1,4 @@
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -10,6 +11,7 @@ from threatmod_automation.ai_review import _extract_output_text
 from threatmod_automation.ai_review import _extract_github_models_text
 from threatmod_automation.guidance import build_assessment
 from threatmod_automation.guidance import render_assessment_markdown
+from threatmod_automation.parser import parse_architecture
 from threatmod_automation.parser import parse_plantuml
 from threatmod_automation.runner import run_analysis
 from threatmod_automation.threagile import build_threagile_yaml_model
@@ -30,6 +32,146 @@ hmi --> plc : OPCUA
 plc --> historian : TCP
 @enduml
 """
+
+STARUML_PROJECT = {
+    "_type": "Project",
+    "_id": "project",
+    "name": "Star Sample",
+    "ownedElements": [
+        {
+            "_type": "UMLModel",
+            "_id": "model",
+            "_parent": {"$ref": "project"},
+            "name": "Architecture",
+            "ownedElements": [
+                {
+                    "_type": "UMLPackage",
+                    "_id": "control-zone",
+                    "_parent": {"$ref": "model"},
+                    "name": "Control Zone",
+                    "ownedElements": [
+                        {
+                            "_type": "UMLNode",
+                            "_id": "plc",
+                            "_parent": {"$ref": "control-zone"},
+                            "name": "PLC",
+                            "stereotype": "device",
+                        },
+                        {
+                            "_type": "UMLComponent",
+                            "_id": "hmi",
+                            "_parent": {"$ref": "control-zone"},
+                            "name": "HMI",
+                        },
+                        {
+                            "_type": "UMLComponent",
+                            "_id": "gateway",
+                            "_parent": {"$ref": "control-zone"},
+                            "name": "Gateway",
+                            "attributes": [
+                                {
+                                    "_type": "UMLPort",
+                                    "_id": "gateway-port",
+                                    "_parent": {"$ref": "gateway"},
+                                    "name": "Telemetry Port",
+                                }
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "_type": "UMLActor",
+                    "_id": "operator",
+                    "_parent": {"$ref": "model"},
+                    "name": "Operator",
+                },
+                {
+                    "_type": "UMLClass",
+                    "_id": "historian",
+                    "_parent": {"$ref": "model"},
+                    "name": "Historian",
+                    "stereotype": "database",
+                },
+                {
+                    "_type": "UMLDependency",
+                    "_id": "flow-1",
+                    "_parent": {"$ref": "operator"},
+                    "name": "HTTPS",
+                    "source": {"$ref": "operator"},
+                    "target": {"$ref": "hmi"},
+                },
+                {
+                    "_type": "UMLCommunicationPath",
+                    "_id": "flow-2",
+                    "_parent": {"$ref": "plc"},
+                    "name": "OPCUA",
+                    "end1": {
+                        "_type": "UMLAssociationEnd",
+                        "_id": "flow-2-end-1",
+                        "_parent": {"$ref": "flow-2"},
+                        "reference": {"$ref": "hmi"},
+                    },
+                    "end2": {
+                        "_type": "UMLAssociationEnd",
+                        "_id": "flow-2-end-2",
+                        "_parent": {"$ref": "flow-2"},
+                        "reference": {"$ref": "plc"},
+                    },
+                },
+                {
+                    "_type": "UMLDependency",
+                    "_id": "flow-3",
+                    "_parent": {"$ref": "gateway-port"},
+                    "name": "TCP telemetry",
+                    "source": {"$ref": "gateway-port"},
+                    "target": {"$ref": "historian"},
+                },
+            ],
+        }
+    ],
+}
+
+STARUML_FRAGMENT = {
+    "_type": "DFDDataFlowModel",
+    "_id": "fragment",
+    "name": "Payment Fragment",
+    "ownedElements": [
+        {
+            "_type": "DFDExternalEntity",
+            "_id": "customer",
+            "_parent": {"$ref": "fragment"},
+            "name": "Customer",
+        },
+        {
+            "_type": "DFDProcess",
+            "_id": "billing-api",
+            "_parent": {"$ref": "fragment"},
+            "name": "Billing API",
+        },
+        {
+            "_type": "DFDDataStore",
+            "_id": "ledger",
+            "_parent": {"$ref": "fragment"},
+            "name": "Ledger",
+        },
+        {
+            "_type": "DFDDataFlow",
+            "_id": "fragment-flow-1",
+            "_parent": {"$ref": "customer"},
+            "name": "HTTPS order",
+            "source": {"$ref": "customer"},
+            "target": {"$ref": "billing-api"},
+        },
+        {
+            "_type": "DFDDataFlow",
+            "_id": "fragment-flow-2",
+            "_parent": {"$ref": "billing-api"},
+            "name": "store order",
+            "source": {"$ref": "billing-api"},
+            "target": {"$ref": "ledger"},
+        },
+    ],
+}
 
 
 class PipelineTests(unittest.TestCase):
@@ -98,6 +240,36 @@ brake_ecu --> telemetry.db : TCP
         self.assertIn("### OpenAI", markdown)
         self.assertIn("Engineering workstation", markdown)
 
+    def test_parse_architecture_supports_staruml_project_files(self) -> None:
+        model = parse_architecture(json.dumps(STARUML_PROJECT), source_name="architecture.mdj")
+        assessment = build_assessment(model)
+        threagile = build_threagile_yaml_model(model)
+
+        self.assertEqual(model.title, "Star Sample")
+        self.assertEqual(len(model.components), 5)
+        self.assertEqual(len(model.data_flows), 3)
+        self.assertIn("Control Zone", model.boundaries)
+        self.assertEqual(model.components["plc"].kind, "device")
+        self.assertEqual(model.components["historian"].kind, "database")
+        self.assertEqual(model.data_flows[2].source, "gateway")
+        self.assertTrue(assessment["coverage"]["has_network_boundary"])
+        self.assertEqual(threagile["technical_assets"]["Historian"]["type"], "datastore")
+        self.assertEqual(
+            threagile["trust_boundaries"]["Control Zone"]["technical_assets_inside"],
+            ["gateway", "hmi", "plc"],
+        )
+
+    def test_parse_architecture_supports_staruml_fragment_files(self) -> None:
+        model = parse_architecture(json.dumps(STARUML_FRAGMENT), source_name="fragment.mfj")
+
+        self.assertEqual(model.title, "Payment Fragment")
+        self.assertEqual(len(model.components), 3)
+        self.assertEqual(len(model.data_flows), 2)
+        self.assertEqual(model.components["customer"].kind, "actor")
+        self.assertEqual(model.components["billing_api"].kind, "service")
+        self.assertEqual(model.components["ledger"].kind, "database")
+        self.assertEqual(model.data_flows[0].protocol, "https")
+
     def test_extract_output_text_reads_response_output_array(self) -> None:
         payload = {
             "status": "completed",
@@ -145,6 +317,24 @@ brake_ecu --> telemetry.db : TCP
         self.assertIsNone(result.threagile_pdf_path)
         self.assertIsNone(result.ai_review_path)
         self.assertIn("Coverage Summary", result.report_path.read_text(encoding="utf-8"))
+
+    def test_runner_accepts_staruml_project_and_fragment_files(self) -> None:
+        cases = [
+            ("examples/test-sample.mdj", json.dumps(STARUML_PROJECT), Path("output/test-runner-mdj"), "Star Sample"),
+            ("examples/test-fragment.mfj", json.dumps(STARUML_FRAGMENT), Path("output/test-runner-mfj"), "Payment Fragment"),
+        ]
+
+        for filename, contents, output_dir, expected_title in cases:
+            with self.subTest(filename=filename):
+                input_path = Path(filename)
+                input_path.write_text(contents, encoding="utf-8")
+
+                result = run_analysis(input_path, output_dir=output_dir)
+
+                self.assertTrue(result.yaml_path.exists())
+                self.assertTrue((output_dir / "threagile.yaml").exists())
+                self.assertTrue(result.report_path.exists())
+                self.assertIn(expected_title, result.report_path.read_text(encoding="utf-8"))
 
     def test_runner_can_generate_threagile_pdf_via_docker(self) -> None:
         input_path = Path("examples/test-sample.puml")
