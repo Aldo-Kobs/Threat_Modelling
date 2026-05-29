@@ -1,0 +1,949 @@
+threagile_version: 1.0.0
+title: Ship Emergency Mode
+date: 2026-05-29
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: Degraded-operation architecture for local bridge and machinery control, isolated OT switching, emergency communications, and incident evidence capture.
+business_criticality: important
+business_overview:
+  description: Degraded-operation architecture for local bridge and machinery control, isolated OT switching, emergency communications, and incident evidence capture.
+  images: []
+technical_overview:
+  description: Emergency mode isolates non-essential shore and internet connectivity. Manual and local controls remain available for safety-critical steering, propulsion, alarms, and crew communication. Incident evidence is buffered locally until connectivity is restored or handed off manually.
+  images: []
+questions:
+  Safety critical assets?: ""
+  Flow auth and replay controls?: ""
+  Identity and secrets admin?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - it-service
+  - network-infrastructure
+  - operational-technology
+data_assets:
+  Bridge officer selects emergenc:
+    id: flow-data-1
+    description: Inferred from the data flow between Bridge Watch Officer and Emergency Bridge Console.
+    usage: business
+    tags: []
+    origin: Bridge Watch Officer
+    owner: Emergency Bridge Console
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Chief engineer operates fallbac:
+    id: flow-data-2
+    description: Inferred from the data flow between Chief Engineer and Fallback Engine Panel.
+    usage: business
+    tags: []
+    origin: Chief Engineer
+    owner: Fallback Engine Panel
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Emergency bridge console sends:
+    id: flow-data-3
+    description: Inferred from the data flow between Emergency Bridge Console and Isolated OT Switch.
+    usage: business
+    tags: []
+    origin: Emergency Bridge Console
+    owner: Isolated OT Switch
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Fallback engine panel sends loc:
+    id: flow-data-4
+    description: Inferred from the data flow between Fallback Engine Panel and Isolated OT Switch.
+    usage: business
+    tags: []
+    origin: Fallback Engine Panel
+    owner: Isolated OT Switch
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Isolated OT switch forwards ste:
+    id: flow-data-5
+    description: Inferred from the data flow between Isolated OT Switch and Manual Steering Panel.
+    usage: business
+    tags: []
+    origin: Isolated OT Switch
+    owner: Manual Steering Panel
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Isolated OT switch forwards app:
+    id: flow-data-6
+    description: Inferred from the data flow between Isolated OT Switch and Local Control PLC.
+    usage: business
+    tags: []
+    origin: Isolated OT Switch
+    owner: Local Control PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Local control PLC sends alarm a:
+    id: flow-data-7
+    description: Inferred from the data flow between Local Control PLC and Safety Alarm Panel.
+    usage: business
+    tags: []
+    origin: Local Control PLC
+    owner: Safety Alarm Panel
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Manual steering panel reports r:
+    id: flow-data-8
+    description: Inferred from the data flow between Manual Steering Panel and Safety Alarm Panel.
+    usage: business
+    tags: []
+    origin: Manual Steering Panel
+    owner: Safety Alarm Panel
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Safety alarm panel triggers eme:
+    id: flow-data-9
+    description: Inferred from the data flow between Safety Alarm Panel and Crew PA System.
+    usage: business
+    tags: []
+    origin: Safety Alarm Panel
+    owner: Crew PA System
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Emergency bridge console buffer:
+    id: flow-data-10
+    description: Inferred from the data flow between Emergency Bridge Console and VDR Buffer Store.
+    usage: business
+    tags: []
+    origin: Emergency Bridge Console
+    owner: VDR Buffer Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Fallback engine panel buffers m:
+    id: flow-data-11
+    description: Inferred from the data flow between Fallback Engine Panel and VDR Buffer Store.
+    usage: business
+    tags: []
+    origin: Fallback Engine Panel
+    owner: VDR Buffer Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Incident responder collects log:
+    id: flow-data-12
+    description: Inferred from the data flow between Incident Responder and Incident Response Laptop.
+    usage: business
+    tags: []
+    origin: Incident Responder
+    owner: Incident Response Laptop
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  VDR buffer store exports incide:
+    id: flow-data-13
+    description: Inferred from the data flow between VDR Buffer Store and Incident Response Laptop.
+    usage: business
+    tags: []
+    origin: VDR Buffer Store
+    owner: Incident Response Laptop
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Incident response laptop stores:
+    id: flow-data-14
+    description: Inferred from the data flow between Incident Response Laptop and Evidence Archive.
+    usage: business
+    tags: []
+    origin: Incident Response Laptop
+    owner: Evidence Archive
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Bridge officer requests emergen:
+    id: flow-data-15
+    description: Inferred from the data flow between Bridge Watch Officer and Radio Room Console.
+    usage: business
+    tags: []
+    origin: Bridge Watch Officer
+    owner: Radio Room Console
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Radio room console sends emerge:
+    id: flow-data-16
+    description: Inferred from the data flow between Radio Room Console and Shore Rescue Center.
+    usage: business
+    tags: []
+    origin: Radio Room Console
+    owner: Shore Rescue Center
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  Bridge Watch Officer:
+    id: bridge-watch-officer
+    description: Imported from UML element 'Bridge Watch Officer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-15
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: emergency-bridge-console
+        description: Bridge officer selects emergency control mode and acknowledges alerts.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+      Flow 15:
+        target: radio-room-console
+        description: Bridge officer requests emergency external communications.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-15
+        data_assets_received: []
+  Chief Engineer:
+    id: chief-engineer
+    description: Imported from UML element 'Chief Engineer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 2:
+        target: fallback-engine-panel
+        description: Chief engineer operates fallback engine controls during degraded operations.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Crew PA System:
+    id: crew-pa-system
+    description: Imported from UML element 'Crew PA System' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links: {}
+  Emergency Bridge Console:
+    id: emergency-bridge-console
+    description: Imported from UML element 'Emergency Bridge Console' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-10
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: isolated-ot-switch
+        description: Emergency bridge console sends local bridge commands on isolated OT network.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+      Flow 10:
+        target: vdr-buffer-store
+        description: Emergency bridge console buffers incident timeline and operator actions.
+        protocol: binary
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-10
+        data_assets_received: []
+  Evidence Archive:
+    id: evidence-archive
+    description: Imported from UML element 'Evidence Archive' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-14
+    data_assets_stored:
+      - flow-data-14
+    data_formats_accepted: []
+    communication_links: {}
+  Fallback Engine Panel:
+    id: fallback-engine-panel
+    description: Imported from UML element 'Fallback Engine Panel' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-11
+      - flow-data-2
+      - flow-data-4
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 4:
+        target: isolated-ot-switch
+        description: Fallback engine panel sends local machinery commands on isolated OT network.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-4
+        data_assets_received: []
+      Flow 11:
+        target: vdr-buffer-store
+        description: Fallback engine panel buffers machinery actions and status changes.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-11
+        data_assets_received: []
+  Incident Responder:
+    id: incident-responder
+    description: Imported from UML element 'Incident Responder' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-12
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 12:
+        target: incident-response-laptop
+        description: Incident responder collects logs and triage notes locally.
+        protocol: ssh
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-12
+        data_assets_received: []
+  Incident Response Laptop:
+    id: incident-response-laptop
+    description: Imported from UML element 'Incident Response Laptop' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-12
+      - flow-data-13
+      - flow-data-14
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 14:
+        target: evidence-archive
+        description: Incident response laptop stores collected evidence and hashes.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-14
+        data_assets_received: []
+  Isolated OT Switch:
+    id: isolated-ot-switch
+    description: Imported from UML element 'Isolated OT Switch' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-3
+      - flow-data-4
+      - flow-data-5
+      - flow-data-6
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 5:
+        target: manual-steering-panel
+        description: Isolated OT switch forwards steering mode and rudder command messages.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-5
+        data_assets_received: []
+      Flow 6:
+        target: local-control-plc
+        description: Isolated OT switch forwards approved local propulsion commands.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-6
+        data_assets_received: []
+  Local Control PLC:
+    id: local-control-plc
+    description: Imported from UML element 'Local Control PLC' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-6
+      - flow-data-7
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 7:
+        target: safety-alarm-panel
+        description: Local control PLC sends alarm and trip state to safety alarm panel.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-7
+        data_assets_received: []
+  Manual Steering Panel:
+    id: manual-steering-panel
+    description: Imported from UML element 'Manual Steering Panel' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-5
+      - flow-data-8
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 8:
+        target: safety-alarm-panel
+        description: Manual steering panel reports rudder state and steering faults.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-8
+        data_assets_received: []
+  Radio Room Console:
+    id: radio-room-console
+    description: Imported from UML element 'Radio Room Console' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-15
+      - flow-data-16
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 16:
+        target: shore-rescue-center
+        description: Radio room console sends emergency status and position to shore rescue center.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-16
+        data_assets_received: []
+  Safety Alarm Panel:
+    id: safety-alarm-panel
+    description: Imported from UML element 'Safety Alarm Panel' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-7
+      - flow-data-8
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 9:
+        target: crew-pa-system
+        description: Safety alarm panel triggers emergency crew announcements.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-9
+        data_assets_received: []
+  Shore Rescue Center:
+    id: shore-rescue-center
+    description: Imported from UML element 'Shore Rescue Center' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-16
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links: {}
+  VDR Buffer Store:
+    id: vdr-buffer-store
+    description: Imported from UML element 'VDR Buffer Store' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-11
+      - flow-data-13
+    data_assets_stored:
+      - flow-data-10
+      - flow-data-11
+      - flow-data-13
+    data_formats_accepted: []
+    communication_links:
+      Flow 13:
+        target: incident-response-laptop
+        description: VDR buffer store exports incident evidence for preservation.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-13
+        data_assets_received: []
+trust_boundaries:
+  Bridge OT Zone:
+    id: bridge-ot-zone
+    description: Bridge OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - bridge-watch-officer
+      - vdr-buffer-store
+    trust_boundaries_nested:
+      - emergency-network-zone
+  Emergency Network Zone:
+    id: emergency-network-zone
+    description: Emergency Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - crew-pa-system
+      - emergency-bridge-console
+      - fallback-engine-panel
+      - isolated-ot-switch
+      - local-control-plc
+      - manual-steering-panel
+      - safety-alarm-panel
+    trust_boundaries_nested: []
+  Machinery OT Zone:
+    id: machinery-ot-zone
+    description: Machinery OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - chief-engineer
+    trust_boundaries_nested:
+      - emergency-network-zone
+  Radio Room Zone:
+    id: radio-room-zone
+    description: Radio Room Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - radio-room-console
+    trust_boundaries_nested: []
+  Ship IT Zone:
+    id: ship-it-zone
+    description: Ship IT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - evidence-archive
+      - incident-responder
+      - incident-response-laptop
+    trust_boundaries_nested: []
+  Shore Emergency Zone:
+    id: shore-emergency-zone
+    description: Shore Emergency Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - shore-rescue-center
+    trust_boundaries_nested: []
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}
