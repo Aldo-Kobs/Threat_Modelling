@@ -54,6 +54,7 @@ PROTOCOL_MAP = {
 }
 
 STORAGE_KINDS = {"database", "queue"}
+EXCEL_SHEET_NAME_LIMIT = 31
 
 
 def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
@@ -104,7 +105,7 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
 
     technical_assets: dict[str, dict] = {}
     for alias, component in sorted_components:
-        technical_assets[_unique_label(component.name, alias, technical_assets)] = {
+        technical_assets[_unique_label(component.name, alias, technical_assets, max_length=EXCEL_SHEET_NAME_LIMIT)] = {
             "id": technical_asset_ids[alias],
             "description": f"Imported from UML element '{component.name}' of kind '{component.kind}'.",
             "type": TECHNICAL_ASSET_TYPE_MAP.get(component.kind, "process"),
@@ -141,7 +142,7 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
             for alias, component in sorted_components
             if component.boundaries and component.boundaries[-1] == boundary_name
         ]
-        trust_boundaries[_unique_label(boundary_name, boundary_ids[boundary_name], trust_boundaries)] = {
+        trust_boundaries[_unique_label(boundary_name, boundary_ids[boundary_name], trust_boundaries, max_length=EXCEL_SHEET_NAME_LIMIT)] = {
             "id": boundary_ids[boundary_name],
             "description": boundary_name,
             "type": _infer_trust_boundary_type(boundary_name),
@@ -152,31 +153,36 @@ def build_threagile_yaml_model(model: ArchitectureModel) -> dict:
 
     data_assets: dict[str, dict] = {}
     for inferred_asset in inferred_data_assets:
-        label = _unique_label(inferred_asset["label"], inferred_asset["asset"]["id"], data_assets)
+        label = _unique_label(
+            inferred_asset["label"],
+            inferred_asset["asset"]["id"],
+            data_assets,
+            max_length=EXCEL_SHEET_NAME_LIMIT,
+        )
         data_assets[label] = inferred_asset["asset"]
 
     return {
         "threagile_version": "1.0.0",
-        "title": model.title,
+        "title": _fit_label(model.title, EXCEL_SHEET_NAME_LIMIT),
         "date": date.today().isoformat(),
         "author": {
             "name": "threatmod-automation",
             "homepage": "",
         },
-        "management_summary_comment": "Imported automatically from UML / PlantUML by threatmod-automation.",
+        "management_summary_comment": "Generated from a normalized architecture model by threatmod-automation.",
         "business_criticality": "important",
         "business_overview": {
             "description": "Review and refine the inferred business context before relying on generated findings.",
             "images": [],
         },
         "technical_overview": {
-            "description": "This Threagile model was generated from the parsed architecture and should be refined in-place.",
+            "description": "This Threagile model was generated from the normalized architecture and should be refined in-place.",
             "images": [],
         },
         "questions": {
-            "Which assets process safety-relevant or mission-critical functions?": "",
-            "Which flows require authentication, encryption, freshness, and anti-replay controls?": "",
-            "Where are identities, secrets, and update channels administered?": "",
+            "Safety critical assets?": "",
+            "Flow auth and replay controls?": "",
+            "Identity and secrets admin?": "",
         },
         "abuse_cases": {},
         "security_requirements": {},
@@ -208,8 +214,11 @@ def generate_threagile_pdf(
 
     output_dir = model_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
+    fontconfig_cache_dir = output_dir / ".cache" / "fontconfig"
+    fontconfig_cache_dir.mkdir(parents=True, exist_ok=True)
     started_at = time.time()
     container_model_path = THREAGILE_WORKDIR / model_path.name
+    container_cache_dir = THREAGILE_WORKDIR / ".cache"
 
     command = [
         "docker",
@@ -220,6 +229,10 @@ def generate_threagile_pdf(
         command.extend(["--user", f"{os.getuid()}:{os.getgid()}"])
     command.extend(
         [
+            "--env",
+            f"HOME={THREAGILE_WORKDIR}",
+            "--env",
+            f"XDG_CACHE_HOME={container_cache_dir}",
             "--mount",
             f"type=bind,source={output_dir},target={THREAGILE_WORKDIR}",
             docker_image.strip(),
@@ -398,14 +411,31 @@ def _build_component_id_map(model: ArchitectureModel) -> dict[str, str]:
     return resolved_ids
 
 
-def _unique_label(preferred: str, fallback: str, container: dict[str, dict]) -> str:
-    label = preferred.strip() or fallback
+def _unique_label(
+    preferred: str,
+    fallback: str,
+    container: dict[str, dict],
+    *,
+    max_length: int | None = None,
+) -> str:
+    label = _fit_label(preferred.strip() or fallback, max_length)
     if label not in container:
         return label
 
     counter = 2
     while True:
-        candidate = f"{label} ({counter})"
+        suffix = f" ({counter})"
+        if max_length is None:
+            candidate = f"{label}{suffix}"
+        else:
+            candidate = f"{_fit_label(label, max_length - len(suffix))}{suffix}"
         if candidate not in container:
             return candidate
         counter += 1
+
+
+def _fit_label(value: str, max_length: int | None) -> str:
+    label = value.strip() or "item"
+    if max_length is None or len(label) <= max_length:
+        return label
+    return label[:max_length].rstrip(" .,:;-/") or label[:max_length]

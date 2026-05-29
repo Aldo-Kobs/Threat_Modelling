@@ -11,7 +11,9 @@ requires-python = ">=3.11"
 authors = [
   { name = "OpenAI Codex" }
 ]
-dependencies = []
+dependencies = [
+  "PyYAML>=6.0"
+]
 
 [project.scripts]
 threatmod = "threatmod_automation.cli:main"

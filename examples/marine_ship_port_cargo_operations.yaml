@@ -1,0 +1,862 @@
+threagile_version: 1.0.0
+title: Ship Port Cargo Operations
+date: 2026-05-29
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: In-port architecture for cargo planning, ballast and stability systems, port connectivity, customs exchange, and reefer monitoring.
+business_criticality: important
+business_overview:
+  description: In-port architecture for cargo planning, ballast and stability systems, port connectivity, customs exchange, and reefer monitoring.
+  images: []
+technical_overview:
+  description: Cargo and port exchanges are active while the vessel is alongside or approaching a terminal. Cargo systems can exchange business data with port systems but do not directly control propulsion. Ballast and stability data is safety-relevant and requires integrity and authorization controls.
+  images: []
+questions:
+  Safety critical assets?: ""
+  Flow auth and replay controls?: ""
+  Identity and secrets admin?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - it-service
+  - network-infrastructure
+  - operational-technology
+data_assets:
+  Terminal operator updates berth:
+    id: flow-data-1
+    description: Inferred from the data flow between Terminal Operator and Port Community System.
+    usage: business
+    tags: []
+    origin: Terminal Operator
+    owner: Port Community System
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Port community system publishes:
+    id: flow-data-2
+    description: Inferred from the data flow between Port Community System and Terminal WiFi Gateway.
+    usage: business
+    tags: []
+    origin: Port Community System
+    owner: Terminal WiFi Gateway
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Terminal WiFi gateway connects:
+    id: flow-data-3
+    description: Inferred from the data flow between Terminal WiFi Gateway and Ship Core Router.
+    usage: business
+    tags: []
+    origin: Terminal WiFi Gateway
+    owner: Ship Core Router
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship core routes approved cargo:
+    id: flow-data-4
+    description: Inferred from the data flow between Ship Core Router and Ship Cargo Firewall.
+    usage: business
+    tags: []
+    origin: Ship Core Router
+    owner: Ship Cargo Firewall
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo firewall permits validate:
+    id: flow-data-5
+    description: Inferred from the data flow between Ship Cargo Firewall and Cargo Management Server.
+    usage: business
+    tags: []
+    origin: Ship Cargo Firewall
+    owner: Cargo Management Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo planner reviews loading p:
+    id: flow-data-6
+    description: Inferred from the data flow between Cargo Planner and Cargo Management Server.
+    usage: business
+    tags: []
+    origin: Cargo Planner
+    owner: Cargo Management Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo management server stores:
+    id: flow-data-7
+    description: Inferred from the data flow between Cargo Management Server and Manifest Database.
+    usage: business
+    tags: []
+    origin: Cargo Management Server
+    owner: Manifest Database
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo management sends loading:
+    id: flow-data-8
+    description: Inferred from the data flow between Cargo Management Server and Stability Calculator.
+    usage: business
+    tags: []
+    origin: Cargo Management Server
+    owner: Stability Calculator
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Stability calculator sends appr:
+    id: flow-data-9
+    description: Inferred from the data flow between Stability Calculator and Ballast Controller.
+    usage: business
+    tags: []
+    origin: Stability Calculator
+    owner: Ballast Controller
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ballast controller returns tank:
+    id: flow-data-10
+    description: Inferred from the data flow between Ballast Controller and Stability Calculator.
+    usage: business
+    tags: []
+    origin: Ballast Controller
+    owner: Stability Calculator
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Reefer monitoring unit reports:
+    id: flow-data-11
+    description: Inferred from the data flow between Reefer Monitoring Unit and Cargo Management Server.
+    usage: business
+    tags: []
+    origin: Reefer Monitoring Unit
+    owner: Cargo Management Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo management sends customs:
+    id: flow-data-12
+    description: Inferred from the data flow between Cargo Management Server and Customs API Gateway.
+    usage: business
+    tags: []
+    origin: Cargo Management Server
+    owner: Customs API Gateway
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Customs API gateway returns cle:
+    id: flow-data-13
+    description: Inferred from the data flow between Customs API Gateway and Cargo Management Server.
+    usage: business
+    tags: []
+    origin: Customs API Gateway
+    owner: Cargo Management Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo management records cargo:
+    id: flow-data-14
+    description: Inferred from the data flow between Cargo Management Server and Cargo Log Store.
+    usage: business
+    tags: []
+    origin: Cargo Management Server
+    owner: Cargo Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cargo firewall records port con:
+    id: flow-data-15
+    description: Inferred from the data flow between Ship Cargo Firewall and Cargo Log Store.
+    usage: business
+    tags: []
+    origin: Ship Cargo Firewall
+    owner: Cargo Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  Ballast Controller:
+    id: ballast-controller
+    description: Imported from UML element 'Ballast Controller' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 10:
+        target: stability-calculator
+        description: Ballast controller returns tank levels, valve state, and pump status.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-10
+        data_assets_received: []
+  Cargo Log Store:
+    id: cargo-log-store
+    description: Imported from UML element 'Cargo Log Store' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-14
+      - flow-data-15
+    data_assets_stored:
+      - flow-data-14
+      - flow-data-15
+    data_formats_accepted: []
+    communication_links: {}
+  Cargo Management Server:
+    id: cargo-management-server
+    description: Imported from UML element 'Cargo Management Server' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-11
+      - flow-data-12
+      - flow-data-13
+      - flow-data-14
+      - flow-data-5
+      - flow-data-6
+      - flow-data-7
+      - flow-data-8
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 7:
+        target: manifest-database
+        description: Cargo management server stores manifest, stowage, and dangerous-goods records.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-7
+        data_assets_received: []
+      Flow 8:
+        target: stability-calculator
+        description: Cargo management sends loading plan and weights to stability calculator.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-8
+        data_assets_received: []
+      Flow 12:
+        target: customs-api-gateway
+        description: Cargo management sends customs manifest extracts to shore API.
+        protocol: https
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-12
+        data_assets_received: []
+      Flow 14:
+        target: cargo-log-store
+        description: Cargo management records cargo exchange events and operator actions.
+        protocol: binary
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-14
+        data_assets_received: []
+  Cargo Planner:
+    id: cargo-planner
+    description: Imported from UML element 'Cargo Planner' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-6
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 6:
+        target: cargo-management-server
+        description: Cargo planner reviews loading plan and confirms cargo operations.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-6
+        data_assets_received: []
+  Customs API Gateway:
+    id: customs-api-gateway
+    description: Imported from UML element 'Customs API Gateway' of kind 'cloud'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-12
+      - flow-data-13
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 13:
+        target: cargo-management-server
+        description: Customs API gateway returns clearance responses and inspection requests.
+        protocol: https
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-13
+        data_assets_received: []
+  Manifest Database:
+    id: manifest-database
+    description: Imported from UML element 'Manifest Database' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-7
+    data_assets_stored:
+      - flow-data-7
+    data_formats_accepted: []
+    communication_links: {}
+  Port Community System:
+    id: port-community-system
+    description: Imported from UML element 'Port Community System' of kind 'system'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 2:
+        target: terminal-wifi-gateway
+        description: Port community system publishes cargo exchange messages to terminal network.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Reefer Monitoring Unit:
+    id: reefer-monitor
+    description: Imported from UML element 'Reefer Monitoring Unit' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-11
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 11:
+        target: cargo-management-server
+        description: Reefer monitoring unit reports container temperature and alarm state.
+        protocol: mqtt
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-11
+        data_assets_received: []
+  Ship Cargo Firewall:
+    id: ship-cargo-firewall
+    description: Imported from UML element 'Ship Cargo Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-15
+      - flow-data-4
+      - flow-data-5
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 5:
+        target: cargo-management-server
+        description: Cargo firewall permits validated manifest and terminal messages.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-5
+        data_assets_received: []
+      Flow 15:
+        target: cargo-log-store
+        description: Cargo firewall records port conduit access events.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-15
+        data_assets_received: []
+  Ship Core Router:
+    id: ship-core-router
+    description: Imported from UML element 'Ship Core Router' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-3
+      - flow-data-4
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 4:
+        target: ship-cargo-firewall
+        description: Ship core routes approved cargo traffic to cargo firewall.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-4
+        data_assets_received: []
+  Stability Calculator:
+    id: stability-calculator
+    description: Imported from UML element 'Stability Calculator' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-8
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 9:
+        target: ballast-controller
+        description: Stability calculator sends approved ballast targets for trim and list correction.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-9
+        data_assets_received: []
+  Terminal Operator:
+    id: terminal-operator
+    description: Imported from UML element 'Terminal Operator' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: port-community-system
+        description: Terminal operator updates berth, crane, and cargo handling status.
+        protocol: https
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+  Terminal WiFi Gateway:
+    id: terminal-wifi-gateway
+    description: Imported from UML element 'Terminal WiFi Gateway' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-2
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: ship-core-router
+        description: Terminal WiFi gateway connects approved in-port data exchange to ship core.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+trust_boundaries:
+  Cargo Operations Zone:
+    id: cargo-operations-zone
+    description: Cargo Operations Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - cargo-management-server
+      - manifest-database
+      - reefer-monitor
+      - ship-cargo-firewall
+      - stability-calculator
+    trust_boundaries_nested: []
+  Machinery OT Zone:
+    id: machinery-ot-zone
+    description: Machinery OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ballast-controller
+    trust_boundaries_nested: []
+  Port Network Zone:
+    id: port-network-zone
+    description: Port Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - port-community-system
+      - terminal-operator
+      - terminal-wifi-gateway
+    trust_boundaries_nested: []
+  Ship Core Network Zone:
+    id: ship-core-network-zone
+    description: Ship Core Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ship-core-router
+    trust_boundaries_nested:
+      - cargo-operations-zone
+  Ship IT Zone:
+    id: ship-it-zone
+    description: Ship IT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - cargo-log-store
+      - cargo-planner
+    trust_boundaries_nested: []
+  Shore Cloud Zone:
+    id: shore-cloud-zone
+    description: Shore Cloud Zone
+    type: network-cloud-provider
+    tags: []
+    technical_assets_inside:
+      - customs-api-gateway
+    trust_boundaries_nested: []
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}

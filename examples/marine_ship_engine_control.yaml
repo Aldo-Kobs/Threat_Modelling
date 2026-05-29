@@ -1,0 +1,979 @@
+threagile_version: 1.0.0
+title: Ship Engine Control
+date: 2026-05-29
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: Machinery and propulsion architecture covering engine control, power management, safety alarms, engineering workstation access, and historian logging.
+business_criticality: important
+business_overview:
+  description: Machinery and propulsion architecture covering engine control, power management, safety alarms, engineering workstation access, and historian logging.
+  images: []
+technical_overview:
+  description: Machinery OT is segmented from bridge OT and ship IT through controlled conduits. Engine control commands require local operator authorization and should be reviewed for freshness and replay resistance. Historian data is used for maintenance and incident analysis but does not directly command controllers.
+  images: []
+questions:
+  Safety critical assets?: ""
+  Flow auth and replay controls?: ""
+  Identity and secrets admin?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - it-service
+  - network-infrastructure
+  - operational-technology
+data_assets:
+  Chief engineer monitors engine:
+    id: flow-data-1
+    description: Inferred from the data flow between Chief Engineer and Engine Control HMI.
+    usage: business
+    tags: []
+    origin: Chief Engineer
+    owner: Engine Control HMI
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Chief engineer performs approve:
+    id: flow-data-2
+    description: Inferred from the data flow between Chief Engineer and Engineering Workstation.
+    usage: business
+    tags: []
+    origin: Chief Engineer
+    owner: Engineering Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Engineering workstation retriev:
+    id: flow-data-3
+    description: Inferred from the data flow between Engineering Workstation and Main Engine PLC.
+    usage: business
+    tags: []
+    origin: Engineering Workstation
+    owner: Main Engine PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Engine HMI sends operator-appro:
+    id: flow-data-4
+    description: Inferred from the data flow between Engine Control HMI and Main Engine PLC.
+    usage: business
+    tags: []
+    origin: Engine Control HMI
+    owner: Main Engine PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Main engine PLC sends speed con:
+    id: flow-data-5
+    description: Inferred from the data flow between Main Engine PLC and Governor Controller.
+    usage: business
+    tags: []
+    origin: Main Engine PLC
+    owner: Governor Controller
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Governor controller adjusts fue:
+    id: flow-data-6
+    description: Inferred from the data flow between Governor Controller and Fuel Control Unit.
+    usage: business
+    tags: []
+    origin: Governor Controller
+    owner: Fuel Control Unit
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Fuel control unit returns actua:
+    id: flow-data-7
+    description: Inferred from the data flow between Fuel Control Unit and Main Engine PLC.
+    usage: business
+    tags: []
+    origin: Fuel Control Unit
+    owner: Main Engine PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Machinery sensors publish press:
+    id: flow-data-8
+    description: Inferred from the data flow between Machinery Sensors and Main Engine PLC.
+    usage: business
+    tags: []
+    origin: Machinery Sensors
+    owner: Main Engine PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Main engine PLC sends status, a:
+    id: flow-data-9
+    description: Inferred from the data flow between Main Engine PLC and Engine Control HMI.
+    usage: business
+    tags: []
+    origin: Main Engine PLC
+    owner: Engine Control HMI
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Main engine PLC sends safety al:
+    id: flow-data-10
+    description: Inferred from the data flow between Main Engine PLC and Safety Alarm Panel.
+    usage: business
+    tags: []
+    origin: Main Engine PLC
+    owner: Safety Alarm Panel
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Generator controller publishes:
+    id: flow-data-11
+    description: Inferred from the data flow between Generator Controller and Power Management System.
+    usage: business
+    tags: []
+    origin: Generator Controller
+    owner: Power Management System
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Power management system sends l:
+    id: flow-data-12
+    description: Inferred from the data flow between Power Management System and Generator Controller.
+    usage: business
+    tags: []
+    origin: Power Management System
+    owner: Generator Controller
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Main engine PLC stores operatio:
+    id: flow-data-13
+    description: Inferred from the data flow between Main Engine PLC and Machinery Historian.
+    usage: business
+    tags: []
+    origin: Main Engine PLC
+    owner: Machinery Historian
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Power management stores generat:
+    id: flow-data-14
+    description: Inferred from the data flow between Power Management System and Machinery Historian.
+    usage: business
+    tags: []
+    origin: Power Management System
+    owner: Machinery Historian
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Safety alarm panel stores alarm:
+    id: flow-data-15
+    description: Inferred from the data flow between Safety Alarm Panel and Machinery Historian.
+    usage: business
+    tags: []
+    origin: Safety Alarm Panel
+    owner: Machinery Historian
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Historian exports selected mach:
+    id: flow-data-16
+    description: Inferred from the data flow between Machinery Historian and Machinery Firewall.
+    usage: business
+    tags: []
+    origin: Machinery Historian
+    owner: Machinery Firewall
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Machinery firewall forwards app:
+    id: flow-data-17
+    description: Inferred from the data flow between Machinery Firewall and Ship Core Router.
+    usage: business
+    tags: []
+    origin: Machinery Firewall
+    owner: Ship Core Router
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship core router delivers appro:
+    id: flow-data-18
+    description: Inferred from the data flow between Ship Core Router and Ship Log Server.
+    usage: business
+    tags: []
+    origin: Ship Core Router
+    owner: Ship Log Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  Chief Engineer:
+    id: chief-engineer
+    description: Imported from UML element 'Chief Engineer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: engine-control-hmi
+        description: Chief engineer monitors engine state and authorizes local control actions.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+      Flow 2:
+        target: engineering-workstation
+        description: Chief engineer performs approved engineering checks and configuration review.
+        protocol: ssh
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Engine Control HMI:
+    id: engine-control-hmi
+    description: Imported from UML element 'Engine Control HMI' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-4
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 4:
+        target: main-engine-plc
+        description: Engine HMI sends operator-approved start, stop, and setpoint commands.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-4
+        data_assets_received: []
+  Engineering Workstation:
+    id: engineering-workstation
+    description: Imported from UML element 'Engineering Workstation' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-2
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: main-engine-plc
+        description: Engineering workstation retrieves PLC diagnostics and approved configuration.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+  Fuel Control Unit:
+    id: fuel-control-unit
+    description: Imported from UML element 'Fuel Control Unit' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-6
+      - flow-data-7
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 7:
+        target: main-engine-plc
+        description: Fuel control unit returns actuator status and fault codes.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-7
+        data_assets_received: []
+  Generator Controller:
+    id: generator-controller
+    description: Imported from UML element 'Generator Controller' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-11
+      - flow-data-12
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 11:
+        target: power-management-system
+        description: Generator controller publishes generator state and load values.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-11
+        data_assets_received: []
+  Governor Controller:
+    id: governor-controller
+    description: Imported from UML element 'Governor Controller' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-5
+      - flow-data-6
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 6:
+        target: fuel-control-unit
+        description: Governor controller adjusts fuel control commands.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-6
+        data_assets_received: []
+  Machinery Firewall:
+    id: machinery-firewall
+    description: Imported from UML element 'Machinery Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-16
+      - flow-data-17
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 17:
+        target: ship-core-router
+        description: Machinery firewall forwards approved historian extracts to ship core.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-17
+        data_assets_received: []
+  Machinery Historian:
+    id: machinery-historian
+    description: Imported from UML element 'Machinery Historian' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-13
+      - flow-data-14
+      - flow-data-15
+      - flow-data-16
+    data_assets_stored:
+      - flow-data-13
+      - flow-data-14
+      - flow-data-15
+      - flow-data-16
+    data_formats_accepted: []
+    communication_links:
+      Flow 16:
+        target: machinery-firewall
+        description: Historian exports selected machinery logs through machinery firewall.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-16
+        data_assets_received: []
+  Machinery Sensors:
+    id: machinery-sensors
+    description: Imported from UML element 'Machinery Sensors' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-8
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 8:
+        target: main-engine-plc
+        description: Machinery sensors publish pressure, temperature, vibration, and safety values.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-8
+        data_assets_received: []
+  Main Engine PLC:
+    id: main-engine-plc
+    description: Imported from UML element 'Main Engine PLC' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-13
+      - flow-data-3
+      - flow-data-4
+      - flow-data-5
+      - flow-data-7
+      - flow-data-8
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 5:
+        target: governor-controller
+        description: Main engine PLC sends speed control setpoints to governor controller.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-5
+        data_assets_received: []
+      Flow 9:
+        target: engine-control-hmi
+        description: Main engine PLC sends status, alarms, and interlock state to HMI.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-9
+        data_assets_received: []
+      Flow 10:
+        target: safety-alarm-panel
+        description: Main engine PLC sends safety alarms and shutdown status.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-10
+        data_assets_received: []
+      Flow 13:
+        target: machinery-historian
+        description: Main engine PLC stores operational telemetry and event records.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-13
+        data_assets_received: []
+  Power Management System:
+    id: power-management-system
+    description: Imported from UML element 'Power Management System' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-11
+      - flow-data-12
+      - flow-data-14
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 12:
+        target: generator-controller
+        description: Power management system sends load sharing and breaker coordination commands.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-12
+        data_assets_received: []
+      Flow 14:
+        target: machinery-historian
+        description: Power management stores generator and load-shed history.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-14
+        data_assets_received: []
+  Safety Alarm Panel:
+    id: safety-alarm-panel
+    description: Imported from UML element 'Safety Alarm Panel' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-15
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 15:
+        target: machinery-historian
+        description: Safety alarm panel stores alarm acknowledgements and trip records.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-15
+        data_assets_received: []
+  Ship Core Router:
+    id: ship-core-router
+    description: Imported from UML element 'Ship Core Router' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-17
+      - flow-data-18
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 18:
+        target: ship-log-server
+        description: Ship core router delivers approved machinery logs to ship IT log server.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-18
+        data_assets_received: []
+  Ship Log Server:
+    id: ship-log-server
+    description: Imported from UML element 'Ship Log Server' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-18
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links: {}
+trust_boundaries:
+  Engine Control Zone:
+    id: engine-control-zone
+    description: Engine Control Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - engine-control-hmi
+      - fuel-control-unit
+      - governor-controller
+      - machinery-sensors
+      - main-engine-plc
+    trust_boundaries_nested: []
+  Machinery OT Zone:
+    id: machinery-ot-zone
+    description: Machinery OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - chief-engineer
+      - engineering-workstation
+      - machinery-firewall
+      - machinery-historian
+    trust_boundaries_nested:
+      - engine-control-zone
+      - power-management-zone
+      - safety-monitoring-zone
+  Power Management Zone:
+    id: power-management-zone
+    description: Power Management Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - generator-controller
+      - power-management-system
+    trust_boundaries_nested: []
+  Safety Monitoring Zone:
+    id: safety-monitoring-zone
+    description: Safety Monitoring Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - safety-alarm-panel
+    trust_boundaries_nested: []
+  Ship Core Network Zone:
+    id: ship-core-network-zone
+    description: Ship Core Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ship-core-router
+    trust_boundaries_nested:
+      - machinery-ot-zone
+  Ship IT Zone:
+    id: ship-it-zone
+    description: Ship IT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ship-log-server
+    trust_boundaries_nested: []
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}

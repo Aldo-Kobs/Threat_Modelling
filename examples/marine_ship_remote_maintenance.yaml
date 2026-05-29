@@ -1,0 +1,954 @@
+threagile_version: 1.0.0
+title: Ship Remote Maintenance
+date: 2026-05-29
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: Remote support architecture for vendor diagnostics, shipboard access brokering, maintenance DMZ controls, engineering workstation workflows, and audit logging.
+business_criticality: important
+business_overview:
+  description: Remote support architecture for vendor diagnostics, shipboard access brokering, maintenance DMZ controls, engineering workstation workflows, and audit logging.
+  images: []
+technical_overview:
+  description: Remote maintenance is enabled only during an approved maintenance window. Vendor access is brokered through ship identity and jump-host controls before reaching OT assets. Direct internet access from OT controllers is not allowed in this scenario.
+  images: []
+questions:
+  Safety critical assets?: ""
+  Flow auth and replay controls?: ""
+  Identity and secrets admin?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - it-service
+  - network-infrastructure
+  - operational-technology
+data_assets:
+  Vendor engineer requests a remo:
+    id: flow-data-1
+    description: Inferred from the data flow between Vendor Engineer and Vendor Support Portal.
+    usage: business
+    tags: []
+    origin: Vendor Engineer
+    owner: Vendor Support Portal
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Vendor portal creates a time-bo:
+    id: flow-data-2
+    description: Inferred from the data flow between Vendor Support Portal and Remote Access Broker.
+    usage: business
+    tags: []
+    origin: Vendor Support Portal
+    owner: Remote Access Broker
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cyber officer approves or rejec:
+    id: flow-data-3
+    description: Inferred from the data flow between Cyber Officer and Approval Workflow.
+    usage: business
+    tags: []
+    origin: Cyber Officer
+    owner: Approval Workflow
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Approval workflow grants a time:
+    id: flow-data-4
+    description: Inferred from the data flow between Approval Workflow and Remote Access Broker.
+    usage: business
+    tags: []
+    origin: Approval Workflow
+    owner: Remote Access Broker
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Remote access broker establishe:
+    id: flow-data-5
+    description: Inferred from the data flow between Remote Access Broker and Satcom Terminal.
+    usage: business
+    tags: []
+    origin: Remote Access Broker
+    owner: Satcom Terminal
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Satcom terminal forwards encryp:
+    id: flow-data-6
+    description: Inferred from the data flow between Satcom Terminal and Ship Internet Edge.
+    usage: business
+    tags: []
+    origin: Satcom Terminal
+    owner: Ship Internet Edge
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship edge validates session ide:
+    id: flow-data-7
+    description: Inferred from the data flow between Ship Internet Edge and Ship Identity Service.
+    usage: business
+    tags: []
+    origin: Ship Internet Edge
+    owner: Ship Identity Service
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Identity service authorizes the:
+    id: flow-data-8
+    description: Inferred from the data flow between Ship Identity Service and Maintenance Firewall.
+    usage: business
+    tags: []
+    origin: Ship Identity Service
+    owner: Maintenance Firewall
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Maintenance firewall permits ap:
+    id: flow-data-9
+    description: Inferred from the data flow between Maintenance Firewall and OT Jump Host.
+    usage: business
+    tags: []
+    origin: Maintenance Firewall
+    owner: OT Jump Host
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Jump host brokers interactive e:
+    id: flow-data-10
+    description: Inferred from the data flow between OT Jump Host and Engineering Workstation.
+    usage: business
+    tags: []
+    origin: OT Jump Host
+    owner: Engineering Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Engineering workstation retriev:
+    id: flow-data-11
+    description: Inferred from the data flow between Engineering Workstation and Machinery PLC.
+    usage: business
+    tags: []
+    origin: Engineering Workstation
+    owner: Machinery PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Patch repository provides signe:
+    id: flow-data-12
+    description: Inferred from the data flow between Patch Repository and Engineering Workstation.
+    usage: business
+    tags: []
+    origin: Patch Repository
+    owner: Engineering Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Engineering workstation records:
+    id: flow-data-13
+    description: Inferred from the data flow between Engineering Workstation and Audit Log Store.
+    usage: business
+    tags: []
+    origin: Engineering Workstation
+    owner: Audit Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Jump host records session metad:
+    id: flow-data-14
+    description: Inferred from the data flow between OT Jump Host and Audit Log Store.
+    usage: business
+    tags: []
+    origin: OT Jump Host
+    owner: Audit Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Maintenance firewall records al:
+    id: flow-data-15
+    description: Inferred from the data flow between Maintenance Firewall and Audit Log Store.
+    usage: business
+    tags: []
+    origin: Maintenance Firewall
+    owner: Audit Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Bridge firewall exports access:
+    id: flow-data-16
+    description: Inferred from the data flow between Bridge Firewall and Audit Log Store.
+    usage: business
+    tags: []
+    origin: Bridge Firewall
+    owner: Audit Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  Approval Workflow:
+    id: approval-workflow
+    description: Imported from UML element 'Approval Workflow' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-3
+      - flow-data-4
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 4:
+        target: remote-access-broker
+        description: Approval workflow grants a time-bound maintenance token.
+        protocol: binary-encrypted
+        authentication: token
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-4
+        data_assets_received: []
+  Audit Log Store:
+    id: audit-log-store
+    description: Imported from UML element 'Audit Log Store' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-13
+      - flow-data-14
+      - flow-data-15
+      - flow-data-16
+    data_assets_stored:
+      - flow-data-13
+      - flow-data-14
+      - flow-data-15
+      - flow-data-16
+    data_formats_accepted: []
+    communication_links: {}
+  Bridge Firewall:
+    id: bridge-firewall
+    description: Imported from UML element 'Bridge Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-16
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 16:
+        target: audit-log-store
+        description: Bridge firewall exports access-control events for cross-zone review.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-16
+        data_assets_received: []
+  Cyber Officer:
+    id: cyber-officer
+    description: Imported from UML element 'Cyber Officer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: approval-workflow
+        description: Cyber officer approves or rejects the maintenance window.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+  Engineering Workstation:
+    id: engineering-workstation
+    description: Imported from UML element 'Engineering Workstation' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-11
+      - flow-data-12
+      - flow-data-13
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 11:
+        target: machinery-plc
+        description: Engineering workstation retrieves diagnostics and approved configuration from machinery PLC.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-11
+        data_assets_received: []
+      Flow 13:
+        target: audit-log-store
+        description: Engineering workstation records session actions, file transfers, and configuration checks.
+        protocol: binary
+        authentication: session-id
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-13
+        data_assets_received: []
+  Machinery PLC:
+    id: machinery-plc
+    description: Imported from UML element 'Machinery PLC' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-11
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links: {}
+  Maintenance Firewall:
+    id: maintenance-firewall
+    description: Imported from UML element 'Maintenance Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-15
+      - flow-data-8
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 9:
+        target: ot-jump-host
+        description: Maintenance firewall permits approved session traffic to OT jump host.
+        protocol: binary-encrypted
+        authentication: session-id
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-9
+        data_assets_received: []
+      Flow 15:
+        target: audit-log-store
+        description: Maintenance firewall records allow and deny events.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-15
+        data_assets_received: []
+  OT Jump Host:
+    id: ot-jump-host
+    description: Imported from UML element 'OT Jump Host' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-14
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 10:
+        target: engineering-workstation
+        description: Jump host brokers interactive engineering access.
+        protocol: ssh
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-10
+        data_assets_received: []
+      Flow 14:
+        target: audit-log-store
+        description: Jump host records session metadata and command audit logs.
+        protocol: binary
+        authentication: session-id
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-14
+        data_assets_received: []
+  Patch Repository:
+    id: patch-repository
+    description: Imported from UML element 'Patch Repository' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-12
+    data_assets_stored:
+      - flow-data-12
+    data_formats_accepted: []
+    communication_links:
+      Flow 12:
+        target: engineering-workstation
+        description: Patch repository provides signed maintenance packages to engineering workstation.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-12
+        data_assets_received: []
+  Remote Access Broker:
+    id: remote-access-broker
+    description: Imported from UML element 'Remote Access Broker' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-2
+      - flow-data-4
+      - flow-data-5
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 5:
+        target: satcom-terminal
+        description: Remote access broker establishes encrypted maintenance session over satcom.
+        protocol: binary-encrypted
+        authentication: session-id
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-5
+        data_assets_received: []
+  Satcom Terminal:
+    id: satcom-terminal
+    description: Imported from UML element 'Satcom Terminal' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-5
+      - flow-data-6
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 6:
+        target: ship-internet-edge
+        description: Satcom terminal forwards encrypted remote access traffic to ship edge.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-6
+        data_assets_received: []
+  Ship Identity Service:
+    id: ship-identity-service
+    description: Imported from UML element 'Ship Identity Service' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-7
+      - flow-data-8
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 8:
+        target: maintenance-firewall
+        description: Identity service authorizes the maintenance conduit.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-8
+        data_assets_received: []
+  Ship Internet Edge:
+    id: ship-internet-edge
+    description: Imported from UML element 'Ship Internet Edge' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-6
+      - flow-data-7
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 7:
+        target: ship-identity-service
+        description: Ship edge validates session identity and maintenance token.
+        protocol: binary-encrypted
+        authentication: token
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-7
+        data_assets_received: []
+  Vendor Engineer:
+    id: vendor-engineer
+    description: Imported from UML element 'Vendor Engineer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: vendor-support-portal
+        description: Vendor engineer requests a remote support session.
+        protocol: https
+        authentication: session-id
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+  Vendor Support Portal:
+    id: vendor-support-portal
+    description: Imported from UML element 'Vendor Support Portal' of kind 'cloud'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 2:
+        target: remote-access-broker
+        description: Vendor portal creates a time-bound support request.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+trust_boundaries:
+  Bridge OT Zone:
+    id: bridge-ot-zone
+    description: Bridge OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - bridge-firewall
+    trust_boundaries_nested: []
+  Machinery OT Zone:
+    id: machinery-ot-zone
+    description: Machinery OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - engineering-workstation
+      - machinery-plc
+    trust_boundaries_nested: []
+  Maintenance DMZ:
+    id: maintenance-dmz
+    description: Maintenance DMZ
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - maintenance-firewall
+      - ot-jump-host
+    trust_boundaries_nested: []
+  Satcom DMZ:
+    id: satcom-dmz
+    description: Satcom DMZ
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - satcom-terminal
+      - ship-internet-edge
+    trust_boundaries_nested: []
+  Ship IT Zone:
+    id: ship-it-zone
+    description: Ship IT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - approval-workflow
+      - audit-log-store
+      - cyber-officer
+      - patch-repository
+      - ship-identity-service
+    trust_boundaries_nested: []
+  Shore Cloud Zone:
+    id: shore-cloud-zone
+    description: Shore Cloud Zone
+    type: network-cloud-provider
+    tags: []
+    technical_assets_inside:
+      - remote-access-broker
+      - vendor-support-portal
+    trust_boundaries_nested: []
+  Vendor Network Zone:
+    id: vendor-network-zone
+    description: Vendor Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - vendor-engineer
+    trust_boundaries_nested: []
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}

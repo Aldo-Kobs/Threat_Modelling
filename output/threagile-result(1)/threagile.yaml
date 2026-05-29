@@ -1,0 +1,1320 @@
+threagile_version: 1.0.0
+title: Ship Connected Operations
+date: 2026-05-29
+author:
+  name: threatmod-automation
+  homepage: ""
+management_summary_comment: Baseline connected-vessel architecture covering bridge navigation, machinery control, shipboard IT, shore operations, and cloud telemetry paths for dynamic threat modeling.
+business_criticality: important
+business_overview:
+  description: Baseline connected-vessel architecture covering bridge navigation, machinery control, shipboard IT, shore operations, and cloud telemetry paths for dynamic threat modeling.
+  images: []
+technical_overview:
+  description: The vessel has segmented bridge, machinery, ship IT, and satellite communications networks. Shore operations receives operational telemetry but does not directly command safety-critical controllers in this baseline. Crew identity, audit logging, and backup workflows are represented at architecture level and need implementation detail during review.
+  images: []
+questions:
+  Safety critical assets?: ""
+  Flow auth and replay controls?: ""
+  Identity and secrets admin?: ""
+abuse_cases: {}
+security_requirements: {}
+tags_available:
+  - data-store
+  - human-user
+  - it-service
+  - network-infrastructure
+  - operational-technology
+data_assets:
+  Bridge officer plans routes and:
+    id: flow-data-1
+    description: Inferred from the data flow between Bridge Officer and ECDIS Workstation.
+    usage: business
+    tags: []
+    origin: Bridge Officer
+    owner: ECDIS Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  GNSS receiver sends position, t:
+    id: flow-data-2
+    description: Inferred from the data flow between GNSS Receiver and ECDIS Workstation.
+    usage: business
+    tags: []
+    origin: GNSS Receiver
+    owner: ECDIS Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Radar processor provides target:
+    id: flow-data-3
+    description: Inferred from the data flow between Radar Processor and ECDIS Workstation.
+    usage: business
+    tags: []
+    origin: Radar Processor
+    owner: ECDIS Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  AIS transceiver provides vessel:
+    id: flow-data-4
+    description: Inferred from the data flow between AIS Transceiver and ECDIS Workstation.
+    usage: business
+    tags: []
+    origin: AIS Transceiver
+    owner: ECDIS Workstation
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  ECDIS sends approved waypoint a:
+    id: flow-data-5
+    description: Inferred from the data flow between ECDIS Workstation and Autopilot Controller.
+    usage: business
+    tags: []
+    origin: ECDIS Workstation
+    owner: Autopilot Controller
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Autopilot records steering mode:
+    id: flow-data-6
+    description: Inferred from the data flow between Autopilot Controller and Voyage Data Recorder.
+    usage: business
+    tags: []
+    origin: Autopilot Controller
+    owner: Voyage Data Recorder
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Chief engineer monitors machine:
+    id: flow-data-7
+    description: Inferred from the data flow between Chief Engineer and Machinery HMI.
+    usage: business
+    tags: []
+    origin: Chief Engineer
+    owner: Machinery HMI
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Machinery HMI sends operator-ap:
+    id: flow-data-8
+    description: Inferred from the data flow between Machinery HMI and Engine PLC.
+    usage: business
+    tags: []
+    origin: Machinery HMI
+    owner: Engine PLC
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Engine PLC publishes load and g:
+    id: flow-data-9
+    description: Inferred from the data flow between Engine PLC and Power Management System.
+    usage: business
+    tags: []
+    origin: Engine PLC
+    owner: Power Management System
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Power management reports breake:
+    id: flow-data-10
+    description: Inferred from the data flow between Power Management System and Machinery HMI.
+    usage: business
+    tags: []
+    origin: Power Management System
+    owner: Machinery HMI
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  ECDIS forwards approved voyage:
+    id: flow-data-11
+    description: Inferred from the data flow between ECDIS Workstation and Bridge Firewall.
+    usage: business
+    tags: []
+    origin: ECDIS Workstation
+    owner: Bridge Firewall
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Machinery HMI forwards selected:
+    id: flow-data-12
+    description: Inferred from the data flow between Machinery HMI and Machinery Firewall.
+    usage: business
+    tags: []
+    origin: Machinery HMI
+    owner: Machinery Firewall
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Bridge firewall permits selecte:
+    id: flow-data-13
+    description: Inferred from the data flow between Bridge Firewall and Ship Core Router.
+    usage: business
+    tags: []
+    origin: Bridge Firewall
+    owner: Ship Core Router
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Machinery firewall permits sele:
+    id: flow-data-14
+    description: Inferred from the data flow between Machinery Firewall and Ship Core Router.
+    usage: business
+    tags: []
+    origin: Machinery Firewall
+    owner: Ship Core Router
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship core router delivers filte:
+    id: flow-data-15
+    description: Inferred from the data flow between Ship Core Router and Ship IT Server.
+    usage: business
+    tags: []
+    origin: Ship Core Router
+    owner: Ship IT Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship IT server stores security:
+    id: flow-data-16
+    description: Inferred from the data flow between Ship IT Server and Security Log Store.
+    usage: business
+    tags: []
+    origin: Ship IT Server
+    owner: Security Log Store
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Identity service provides crew:
+    id: flow-data-17
+    description: Inferred from the data flow between Ship Identity Service and Ship IT Server.
+    usage: business
+    tags: []
+    origin: Ship Identity Service
+    owner: Ship IT Server
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Ship IT server forwards compres:
+    id: flow-data-18
+    description: Inferred from the data flow between Ship IT Server and Satcom Terminal.
+    usage: business
+    tags: []
+    origin: Ship IT Server
+    owner: Satcom Terminal
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Satcom terminal sends telemetry:
+    id: flow-data-19
+    description: Inferred from the data flow between Satcom Terminal and Shore Operations API.
+    usage: business
+    tags: []
+    origin: Satcom Terminal
+    owner: Shore Operations API
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Shore operator reviews fleet st:
+    id: flow-data-20
+    description: Inferred from the data flow between Shore Operator and Shore Operations API.
+    usage: business
+    tags: []
+    origin: Shore Operator
+    owner: Shore Operations API
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Shore operations exchanges voya:
+    id: flow-data-21
+    description: Inferred from the data flow between Shore Operations API and Maritime Cloud API.
+    usage: business
+    tags: []
+    origin: Shore Operations API
+    owner: Maritime Cloud API
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+  Cloud API stores fleet telemetr:
+    id: flow-data-22
+    description: Inferred from the data flow between Maritime Cloud API and Fleet Data Lake.
+    usage: business
+    tags: []
+    origin: Maritime Cloud API
+    owner: Fleet Data Lake
+    quantity: many
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This data asset was inferred automatically from a UML flow and needs manual refinement.
+technical_assets:
+  AIS Transceiver:
+    id: ais-transceiver
+    description: Imported from UML element 'AIS Transceiver' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-4
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 4:
+        target: ecdis-workstation
+        description: AIS transceiver provides vessel identity and target messages.
+        protocol: binary
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-4
+        data_assets_received: []
+  Autopilot Controller:
+    id: autopilot-controller
+    description: Imported from UML element 'Autopilot Controller' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-5
+      - flow-data-6
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 6:
+        target: vdr-recorder
+        description: Autopilot records steering mode, heading commands, and status.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-6
+        data_assets_received: []
+  Bridge Firewall:
+    id: bridge-firewall
+    description: Imported from UML element 'Bridge Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-11
+      - flow-data-13
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 13:
+        target: ship-core-router
+        description: Bridge firewall permits selected navigation telemetry to ship core.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-13
+        data_assets_received: []
+  Bridge Officer:
+    id: bridge-officer
+    description: Imported from UML element 'Bridge Officer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-1
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 1:
+        target: ecdis-workstation
+        description: Bridge officer plans routes and acknowledges navigation alerts.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-1
+        data_assets_received: []
+  Chief Engineer:
+    id: chief-engineer
+    description: Imported from UML element 'Chief Engineer' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-7
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 7:
+        target: machinery-hmi
+        description: Chief engineer monitors machinery state and acknowledges alarms.
+        protocol: https
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-7
+        data_assets_received: []
+  ECDIS Workstation:
+    id: ecdis-workstation
+    description: Imported from UML element 'ECDIS Workstation' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-1
+      - flow-data-11
+      - flow-data-2
+      - flow-data-3
+      - flow-data-4
+      - flow-data-5
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 5:
+        target: autopilot-controller
+        description: ECDIS sends approved waypoint and track guidance to autopilot.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-5
+        data_assets_received: []
+      Flow 11:
+        target: bridge-firewall
+        description: ECDIS forwards approved voyage data and logs toward ship core.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-11
+        data_assets_received: []
+  Engine PLC:
+    id: engine-plc
+    description: Imported from UML element 'Engine PLC' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-8
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 9:
+        target: power-management-system
+        description: Engine PLC publishes load and generator status to power management.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-9
+        data_assets_received: []
+  Fleet Data Lake:
+    id: fleet-data-lake
+    description: Imported from UML element 'Fleet Data Lake' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: true
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-22
+    data_assets_stored:
+      - flow-data-22
+    data_formats_accepted: []
+    communication_links: {}
+  GNSS Receiver:
+    id: gnss-receiver
+    description: Imported from UML element 'GNSS Receiver' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-2
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 2:
+        target: ecdis-workstation
+        description: GNSS receiver sends position, time, and fix quality to ECDIS.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-2
+        data_assets_received: []
+  Machinery Firewall:
+    id: machinery-firewall
+    description: Imported from UML element 'Machinery Firewall' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-12
+      - flow-data-14
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 14:
+        target: ship-core-router
+        description: Machinery firewall permits selected machinery telemetry to ship core.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-14
+        data_assets_received: []
+  Machinery HMI:
+    id: machinery-hmi
+    description: Imported from UML element 'Machinery HMI' of kind 'component'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: web-application
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-12
+      - flow-data-7
+      - flow-data-8
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 8:
+        target: engine-plc
+        description: Machinery HMI sends operator-approved engine commands.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-8
+        data_assets_received: []
+      Flow 12:
+        target: machinery-firewall
+        description: Machinery HMI forwards selected alarms and machinery telemetry.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-12
+        data_assets_received: []
+  Maritime Cloud API:
+    id: maritime-cloud-api
+    description: Imported from UML element 'Maritime Cloud API' of kind 'cloud'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-21
+      - flow-data-22
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 22:
+        target: fleet-data-lake
+        description: Cloud API stores fleet telemetry, alerts, and voyage summaries.
+        protocol: binary
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-22
+        data_assets_received: []
+  Power Management System:
+    id: power-management-system
+    description: Imported from UML element 'Power Management System' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-10
+      - flow-data-9
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 10:
+        target: machinery-hmi
+        description: Power management reports breaker, generator, and load-shed status.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-10
+        data_assets_received: []
+  Radar Processor:
+    id: radar-processor
+    description: Imported from UML element 'Radar Processor' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - operational-technology
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-3
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 3:
+        target: ecdis-workstation
+        description: Radar processor provides target overlays and radar tracks.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-3
+        data_assets_received: []
+  Satcom Terminal:
+    id: satcom-terminal
+    description: Imported from UML element 'Satcom Terminal' of kind 'device'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: iot-device
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-18
+      - flow-data-19
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 19:
+        target: shore-operations-api
+        description: Satcom terminal sends telemetry to shore operations API.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-19
+        data_assets_received: []
+  Security Log Store:
+    id: security-log-store
+    description: Imported from UML element 'Security Log Store' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-16
+    data_assets_stored:
+      - flow-data-16
+    data_formats_accepted: []
+    communication_links: {}
+  Ship Core Router:
+    id: ship-core-router
+    description: Imported from UML element 'Ship Core Router' of kind 'node'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-application
+    tags:
+      - network-infrastructure
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-13
+      - flow-data-14
+      - flow-data-15
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 15:
+        target: ship-it-server
+        description: Ship core router delivers filtered OT telemetry to ship IT services.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-15
+        data_assets_received: []
+  Ship Identity Service:
+    id: ship-identity-service
+    description: Imported from UML element 'Ship Identity Service' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-17
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 17:
+        target: ship-it-server
+        description: Identity service provides crew and service authentication assertions.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-17
+        data_assets_received: []
+  Ship IT Server:
+    id: ship-it-server
+    description: Imported from UML element 'Ship IT Server' of kind 'service'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: service
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: false
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-15
+      - flow-data-16
+      - flow-data-17
+      - flow-data-18
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 16:
+        target: security-log-store
+        description: Ship IT server stores security events and operational audit records.
+        protocol: binary
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-16
+        data_assets_received: []
+      Flow 18:
+        target: satcom-terminal
+        description: Ship IT server forwards compressed telemetry through satcom.
+        protocol: binary-encrypted
+        authentication: none
+        authorization: none
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-18
+        data_assets_received: []
+  Shore Operations API:
+    id: shore-operations-api
+    description: Imported from UML element 'Shore Operations API' of kind 'cloud'.
+    type: process
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: web-service-rest
+    tags:
+      - it-service
+    internet: true
+    machine: virtual
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed:
+      - flow-data-19
+      - flow-data-20
+      - flow-data-21
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 21:
+        target: maritime-cloud-api
+        description: Shore operations exchanges voyage and maintenance summaries with cloud services.
+        protocol: https
+        authentication: none
+        authorization: technical-user
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-21
+        data_assets_received: []
+  Shore Operator:
+    id: shore-operator
+    description: Imported from UML element 'Shore Operator' of kind 'actor'.
+    type: external-entity
+    usage: business
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: system
+    technology: client-system
+    tags:
+      - human-user
+    internet: true
+    machine: physical
+    encryption: none
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-20
+    data_assets_stored: []
+    data_formats_accepted: []
+    communication_links:
+      Flow 20:
+        target: shore-operations-api
+        description: Shore operator reviews fleet status and advisory alerts.
+        protocol: https
+        authentication: none
+        authorization: enduser-identity-propagation
+        tags: []
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business
+        data_assets_sent:
+          - flow-data-20
+        data_assets_received: []
+  Voyage Data Recorder:
+    id: vdr-recorder
+    description: Imported from UML element 'Voyage Data Recorder' of kind 'database'.
+    type: datastore
+    usage: business
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope: ""
+    size: component
+    technology: database
+    tags:
+      - data-store
+      - operational-technology
+    internet: false
+    machine: virtual
+    encryption: transparent
+    owner: Imported from UML
+    confidentiality: restricted
+    integrity: important
+    availability: important
+    justification_cia_rating: This asset was inferred automatically from the UML model and needs manual CIA review.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed:
+      - flow-data-6
+    data_assets_stored:
+      - flow-data-6
+    data_formats_accepted: []
+    communication_links: {}
+trust_boundaries:
+  Bridge OT Zone:
+    id: bridge-ot-zone
+    description: Bridge OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ais-transceiver
+      - autopilot-controller
+      - bridge-firewall
+      - bridge-officer
+      - ecdis-workstation
+      - gnss-receiver
+      - radar-processor
+      - vdr-recorder
+    trust_boundaries_nested: []
+  Machinery OT Zone:
+    id: machinery-ot-zone
+    description: Machinery OT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - chief-engineer
+      - engine-plc
+      - machinery-firewall
+      - machinery-hmi
+      - power-management-system
+    trust_boundaries_nested: []
+  Satcom DMZ:
+    id: satcom-dmz
+    description: Satcom DMZ
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - satcom-terminal
+    trust_boundaries_nested: []
+  Ship Core Network Zone:
+    id: ship-core-network-zone
+    description: Ship Core Network Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - ship-core-router
+    trust_boundaries_nested:
+      - bridge-ot-zone
+      - machinery-ot-zone
+  Ship IT Zone:
+    id: ship-it-zone
+    description: Ship IT Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside:
+      - security-log-store
+      - ship-identity-service
+      - ship-it-server
+    trust_boundaries_nested: []
+  Shore Cloud Zone:
+    id: shore-cloud-zone
+    description: Shore Cloud Zone
+    type: network-cloud-provider
+    tags: []
+    technical_assets_inside:
+      - fleet-data-lake
+      - maritime-cloud-api
+      - shore-operations-api
+      - shore-operator
+    trust_boundaries_nested: []
+  Vessel Exterior Zone:
+    id: vessel-exterior-zone
+    description: Vessel Exterior Zone
+    type: network-on-prem
+    tags: []
+    technical_assets_inside: []
+    trust_boundaries_nested:
+      - bridge-ot-zone
+shared_runtimes: {}
+individual_risk_categories: {}
+risk_tracking: {}

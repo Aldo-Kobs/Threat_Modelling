@@ -1,0 +1,85 @@
+# AI Dynamic Architecture YAML Template
+#
+# Purpose:
+#   Use this template when asking AI to draft a normalized architecture before
+#   generating the Threagile YAML model. Keep every required key, even when the
+#   value is unknown or the list is empty.
+#
+# Strict rules:
+#   - Do not add extra top-level keys.
+#   - Use lower_snake_case for every component alias.
+#   - Every data_flows.source and data_flows.target must exactly match one
+#     component alias.
+#   - Use only these component kinds:
+#     actor, component, database, queue, node, cloud, system, device, service.
+#   - Use [] for empty assumptions, trust_boundaries, boundaries, tags, or
+#     data_flows.
+#   - Prefer concrete named assets over generic placeholders.
+#   - Put nested trust boundaries in order from outermost to innermost.
+#
+# Recommended protocol values:
+#   http, https, tls, mqtt, can, ethernet, udp, tcp, ssh, opcua, unknown.
+
+title: "Short, specific architecture title"
+summary: "One or two sentences describing the drafted architecture and scope."
+assumptions:
+  - "List only assumptions made to fill missing architecture details."
+
+trust_boundaries:
+  - "External Zone"
+  - "Application Zone"
+  - "Data Zone"
+
+components:
+  - alias: "external_user"
+    name: "External User"
+    kind: "actor"
+    boundaries:
+      - "External Zone"
+    tags:
+      - "human-user"
+
+  - alias: "web_app"
+    name: "Web Application"
+    kind: "service"
+    boundaries:
+      - "Application Zone"
+    tags:
+      - "internet-facing"
+
+  - alias: "application_database"
+    name: "Application Database"
+    kind: "database"
+    boundaries:
+      - "Data Zone"
+    tags:
+      - "persistent-storage"
+
+data_flows:
+  - source: "external_user"
+    target: "web_app"
+    description: "User submits requests and receives responses over HTTPS."
+    protocol: "https"
+
+  - source: "web_app"
+    target: "application_database"
+    description: "Application reads and writes business records."
+    protocol: "tcp"
+
+# Blank version for new drafts:
+#
+# title: ""
+# summary: ""
+# assumptions: []
+# trust_boundaries: []
+# components:
+#   - alias: ""
+#     name: ""
+#     kind: "component"
+#     boundaries: []
+#     tags: []
+# data_flows:
+#   - source: ""
+#     target: ""
+#     description: ""
+#     protocol: "unknown"
